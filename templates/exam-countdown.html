@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>NEXORA | Exam Countdown</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            color: white;
+
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(255, 80, 160, .13),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 40%,
+                    rgba(90, 80, 255, .15),
+                    transparent 30%
+                ),
+                #03050d;
+
+            overflow-x: hidden;
+        }
+
+
+        .container {
+            width: min(950px, 94%);
+
+            margin: auto;
+
+            padding:
+                35px 0 100px;
+        }
+
+
+        /* BACK */
+
+        .back {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color:
+                rgba(255,255,255,.65);
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            margin-bottom: 30px;
+
+            transition: .2s;
+        }
+
+
+        .back:hover {
+            color: white;
+
+            transform:
+                translateX(-3px);
+        }
+
+
+        /* HERO */
+
+        .hero {
+            text-align: center;
+
+            margin-bottom: 35px;
+        }
+
+
+        .icon {
+            display: block;
+
+            font-size: 60px;
+
+            margin-bottom: 8px;
+
+            filter:
+                drop-shadow(
+                    0 0 20px
+                    rgba(255,80,180,.55)
+                );
+        }
+
+
+        h1 {
+            font-size:
+                clamp(40px, 6vw, 60px);
+
+            font-weight: 900;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #ffffff,
+                    #ff7fc4,
+                    #8d76ff
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+
+        .subtitle {
+            margin-top: 9px;
+
+            color:
+                #b07bc5;
+
+            letter-spacing: 3px;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+
+        /* MAIN CARD */
+
+        .countdown-card {
+
+            padding:
+                35px 30px;
+
+            border-radius: 28px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.075),
+                    rgba(255,255,255,.025)
+                );
+
+            border:
+                1px solid
+                rgba(255,255,255,.13);
+
+            box-shadow:
+                0 25px 60px
+                rgba(0,0,0,.35),
+
+                inset 0 1px 0
+                rgba(255,255,255,.08);
+
+            backdrop-filter:
+                blur(18px);
+        }
+
+
+        /* EXAM NAME */
+
+        .exam-name {
+
+            text-align: center;
+
+            margin-bottom: 28px;
+        }
+
+
+        .exam-name h2 {
+
+            font-size: 27px;
+
+            margin-bottom: 7px;
+
+            color:
+                #ffffff;
+        }
+
+
+        .exam-name p {
+
+            color:
+                rgba(255,255,255,.48);
+
+            font-size: 13px;
+        }
+
+
+        /* COUNTDOWN */
+
+        .countdown {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 14px;
+
+            margin:
+                25px 0 30px;
+        }
+
+
+        .time-box {
+
+            text-align: center;
+
+            padding:
+                24px 10px;
+
+            border-radius: 18px;
+
+            background:
+                rgba(255,255,255,.045);
+
+            border:
+                1px solid
+                rgba(255,255,255,.09);
+
+            box-shadow:
+                inset 0 1px 0
+                rgba(255,255,255,.05);
+        }
+
+
+        .number {
+
+            font-size:
+                clamp(38px, 6vw, 62px);
+
+            font-weight: 900;
+
+            line-height: 1;
+
+            font-variant-numeric:
+                tabular-nums;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #ffffff,
+                    #ff8bd0
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+
+            text-shadow:
+                0 0 25px
+                rgba(255,80,180,.16);
+        }
+
+
+        .label {
+
+            margin-top: 10px;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            letter-spacing: 2px;
+
+            color:
+                rgba(255,255,255,.42);
+        }
+
+
+        /* PROGRESS */
+
+        .progress-area {
+
+            margin-top: 25px;
+
+            padding:
+                18px;
+
+            border-radius: 15px;
+
+            background:
+                rgba(255,255,255,.035);
+
+            border:
+                1px solid
+                rgba(255,255,255,.07);
+        }
+
+
+        .progress-top {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            gap: 10px;
+
+            margin-bottom: 10px;
+
+            font-size: 12px;
+
+            color:
+                rgba(255,255,255,.55);
+        }
+
+
+        .progress-bar {
+
+            height: 8px;
+
+            overflow: hidden;
+
+            border-radius: 20px;
+
+            background:
+                rgba(255,255,255,.08);
+        }
+
+
+        .progress-fill {
+
+            width: 0%;
+
+            height: 100%;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #ff4fae,
+                    #8c5cff
+                );
+
+            box-shadow:
+                0 0 15px
+                rgba(180,70,255,.45);
+
+            transition:
+                width .5s ease;
+        }
+
+
+        /* SETUP */
+
+        .setup {
+
+            margin-top: 28px;
+
+            padding:
+                22px;
+
+            border-radius: 18px;
+
+            background:
+                rgba(255,255,255,.035);
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+        }
+
+
+        .setup-title {
+
+            margin-bottom: 16px;
+
+            color:
+                #d9a2ff;
+
+            font-size: 15px;
+
+            font-weight: 800;
+        }
+
+
+        .form-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 15px;
+        }
+
+
+        .field {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+
+        .field.full {
+
+            grid-column: 1 / -1;
+        }
+
+
+        label {
+
+            color:
+                rgba(255,255,255,.55);
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        input {
+
+            width: 100%;
+
+            height: 45px;
+
+            padding:
+                0 12px;
+
+            color: white;
+
+            background:
+                rgba(3,7,25,.85);
+
+            border:
+                1px solid
+                rgba(255,255,255,.12);
+
+            border-radius: 10px;
+
+            outline: none;
+        }
+
+
+        input:focus {
+
+            border-color:
+                #b064ff;
+
+            box-shadow:
+                0 0 18px
+                rgba(160,70,255,.12);
+        }
+
+
+        /* BUTTON */
+
+        .set-btn {
+
+            width: 100%;
+
+            height: 48px;
+
+            margin-top: 16px;
+
+            border: none;
+
+            border-radius: 11px;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-weight: 800;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #ff4fae,
+                    #774bff
+                );
+
+            box-shadow:
+                0 10px 25px
+                rgba(150,70,255,.20);
+
+            transition: .2s;
+        }
+
+
+        .set-btn:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 15px 32px
+                rgba(150,70,255,.32);
+        }
+
+
+        /* COMPLETE */
+
+        .complete {
+
+            display: none;
+
+            text-align: center;
+
+            margin-top: 25px;
+
+            padding:
+                18px;
+
+            border-radius: 13px;
+
+            color:
+                #8affc8;
+
+            background:
+                rgba(40,255,170,.07);
+
+            border:
+                1px solid
+                rgba(40,255,170,.18);
+        }
+
+
+        /* DEV */
+
+        .dev-credit {
+
+            position: fixed;
+
+            right: 17px;
+
+            bottom: 7px;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            font-style: italic;
+
+            letter-spacing: 1px;
+
+            color:
+                #dc8cff;
+
+            text-shadow:
+                0 0 5px #a52fff,
+                0 0 12px #ff32d0;
+
+            animation:
+                glow 2s
+                ease-in-out
+                infinite
+                alternate;
+        }
+
+
+        @keyframes glow {
+
+            from {
+                opacity: .45;
+            }
+
+            to {
+                opacity: 1;
+            }
+
+        }
+
+
+        @media(max-width:650px) {
+
+            .container {
+                width: 92%;
+            }
+
+            .countdown {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field.full {
+                grid-column: auto;
+            }
+
+            .countdown-card {
+                padding:
+                    25px 18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <a
+        href="/student-tools"
+        class="back"
+    >
+        ← Back to AI Study Tools
+    </a>
+
+
+    <header class="hero">
+
+        <span class="icon">
+            📅
+        </span>
+
+        <h1>
+            Exam Countdown
+        </h1>
+
+        <p class="subtitle">
+            Every Second Counts
+        </p>
+
+    </header>
+
+
+    <div class="countdown-card">
+
+
+        <!-- EXAM -->
+
+        <div class="exam-name">
+
+            <h2 id="examTitle">
+                Your Next Exam
+            </h2>
+
+            <p id="examDateText">
+                Set your exam date below
+            </p>
+
+        </div>
+
+
+        <!-- COUNTDOWN -->
+
+        <div class="countdown">
+
+
+            <div class="time-box">
+
+                <div
+                    id="days"
+                    class="number"
+                >
+                    00
+                </div>
+
+                <div class="label">
+                    DAYS
+                </div>
+
+            </div>
+
+
+            <div class="time-box">
+
+                <div
+                    id="hours"
+                    class="number"
+                >
+                    00
+                </div>
+
+                <div class="label">
+                    HOURS
+                </div>
+
+            </div>
+
+
+            <div class="time-box">
+
+                <div
+                    id="minutes"
+                    class="number"
+                >
+                    00
+                </div>
+
+                <div class="label">
+                    MINUTES
+                </div>
+
+            </div>
+
+
+            <div class="time-box">
+
+                <div
+                    id="seconds"
+                    class="number"
+                >
+                    00
+                </div>
+
+                <div class="label">
+                    SECONDS
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- PROGRESS -->
+
+        <div class="progress-area">
+
+            <div class="progress-top">
+
+                <span>
+                    Preparation Progress
+                </span>
+
+                <span id="progressText">
+                    0%
+                </span>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                <div
+                    id="progressFill"
+                    class="progress-fill"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SETUP -->
+
+        <div class="setup">
+
+
+            <div class="setup-title">
+                ⚙️ Set Your Exam
+            </div>
+
+
+            <div class="form-grid">
+
+
+                <div class="field full">
+
+                    <label>
+                        Exam Name
+                    </label>
+
+                    <input
+                        id="examInput"
+                        type="text"
+                        placeholder="e.g. CGPSC Prelims"
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Exam Date
+                    </label>
+
+                    <input
+                        id="dateInput"
+                        type="date"
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Preparation Start Date
+                    </label>
+
+                    <input
+                        id="startInput"
+                        type="date"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <button
+                class="set-btn"
+                onclick="setExam()"
+            >
+                🚀 Start Countdown
+            </button>
+
+
+        </div>
+
+
+        <div
+            id="complete"
+            class="complete"
+        >
+            🎉 Your exam date has arrived!
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<div class="dev-credit">
+    dev-vinayak
+</div>
+
+
+
+<script>
+
+
+let targetDate = null;
+
+let startDate = null;
+
+let timer = null;
+
+
+
+function pad(number) {
+
+    return String(number)
+        .padStart(2, "0");
+
+}
+
+
+
+function setExam() {
+
+
+    const name =
+        document
+            .getElementById("examInput")
+            .value
+            .trim();
+
+
+    const date =
+        document
+            .getElementById("dateInput")
+            .value;
+
+
+    const start =
+        document
+            .getElementById("startInput")
+            .value;
+
+
+    if (!name || !date) {
+
+        alert(
+            "Please enter exam name and exam date."
+        );
+
+        return;
+    }
+
+
+    targetDate =
+        new Date(
+            date + "T23:59:59"
+        );
+
+
+    if (start) {
+
+        startDate =
+            new Date(
+                start + "T00:00:00"
+            );
+
+    }
+    else {
+
+        startDate =
+            new Date();
+
+    }
+
+
+    document
+        .getElementById("examTitle")
+        .textContent =
+            name;
+
+
+    document
+        .getElementById("examDateText")
+        .textContent =
+            "Exam Date: " +
+            targetDate.toLocaleDateString(
+                "en-IN",
+                {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric"
+                }
+            );
+
+
+    localStorage.setItem(
+        "nexoraExamName",
+        name
+    );
+
+
+    localStorage.setItem(
+        "nexoraExamDate",
+        date
+    );
+
+
+    localStorage.setItem(
+        "nexoraExamStart",
+        start
+    );
+
+
+    document
+        .getElementById("complete")
+        .style.display =
+            "none";
+
+
+    clearInterval(timer);
+
+
+    updateCountdown();
+
+
+    timer =
+        setInterval(
+            updateCountdown,
+            1000
+        );
+
+}
+
+
+
+function updateCountdown() {
+
+
+    if (!targetDate) {
+        return;
+    }
+
+
+    const now =
+        new Date();
+
+
+    const difference =
+        targetDate.getTime()
+        -
+        now.getTime();
+
+
+    if (difference <= 0) {
+
+        document
+            .getElementById("days")
+            .textContent =
+                "00";
+
+
+        document
+            .getElementById("hours")
+            .textContent =
+                "00";
+
+
+        document
+            .getElementById("minutes")
+            .textContent =
+                "00";
+
+
+        document
+            .getElementById("seconds")
+            .textContent =
+                "00";
+
+
+        document
+            .getElementById("complete")
+            .style.display =
+                "block";
+
+
+        clearInterval(timer);
+
+        return;
+    }
+
+
+    const totalSeconds =
+        Math.floor(
+            difference / 1000
+        );
+
+
+    const days =
+        Math.floor(
+            totalSeconds /
+            86400
+        );
+
+
+    const hours =
+        Math.floor(
+            (
+                totalSeconds %
+                86400
+            ) / 3600
+        );
+
+
+    const minutes =
+        Math.floor(
+            (
+                totalSeconds %
+                3600
+            ) / 60
+        );
+
+
+    const seconds =
+        totalSeconds % 60;
+
+
+    document
+        .getElementById("days")
+        .textContent =
+            days;
+
+
+    document
+        .getElementById("hours")
+        .textContent =
+            pad(hours);
+
+
+    document
+        .getElementById("minutes")
+        .textContent =
+            pad(minutes);
+
+
+    document
+        .getElementById("seconds")
+        .textContent =
+            pad(seconds);
+
+
+    updateProgress();
+
+}
+
+
+
+function updateProgress() {
+
+
+    if (!startDate || !targetDate) {
+        return;
+    }
+
+
+    const now =
+        new Date();
+
+
+    const total =
+        targetDate.getTime()
+        -
+        startDate.getTime();
+
+
+    const elapsed =
+        now.getTime()
+        -
+        startDate.getTime();
+
+
+    let percent =
+        (
+            elapsed / total
+        ) * 100;
+
+
+    percent =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                percent
+            )
+        );
+
+
+    document
+        .getElementById("progressFill")
+        .style.width =
+            percent + "%";
+
+
+    document
+        .getElementById("progressText")
+        .textContent =
+            Math.round(percent) + "%";
+
+}
+
+
+
+function loadSavedExam() {
+
+
+    const name =
+        localStorage.getItem(
+            "nexoraExamName"
+        );
+
+
+    const date =
+        localStorage.getItem(
+            "nexoraExamDate"
+        );
+
+
+    const start =
+        localStorage.getItem(
+            "nexoraExamStart"
+        );
+
+
+    if (!name || !date) {
+        return;
+    }
+
+
+    document
+        .getElementById("examInput")
+        .value =
+            name;
+
+
+    document
+        .getElementById("dateInput")
+        .value =
+            date;
+
+
+    if (start) {
+
+        document
+            .getElementById("startInput")
+            .value =
+                start;
+
+    }
+
+
+    setExam();
+
+}
+
+
+
+loadSavedExam();
+
+</script>
+
+
+</body>
+
+</html>

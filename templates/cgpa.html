@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CGPA Calculator | NEXORA</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        .cgpa-page {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .cgpa-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .cgpa-header h1 {
+            margin-bottom: 10px;
+        }
+
+        .cgpa-header p {
+            opacity: 0.7;
+        }
+
+        .cgpa-card {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 30px;
+
+            border-radius: 22px;
+
+            background:
+                rgba(255,255,255,0.06);
+
+            border:
+                1px solid rgba(255,255,255,0.10);
+
+            box-shadow:
+                0 12px 35px rgba(0,0,0,0.15);
+
+            backdrop-filter: blur(10px);
+        }
+
+        .subject-row {
+            display: grid;
+
+            grid-template-columns:
+                1.5fr 1fr 1fr auto;
+
+            gap: 12px;
+
+            align-items: end;
+
+            margin-bottom: 12px;
+        }
+
+        .subject-row input,
+        .subject-row select {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .remove-btn {
+            height: 44px;
+
+            padding: 0 15px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid rgba(
+                    255,
+                    255,
+                    255,
+                    0.15
+                );
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.05
+                );
+
+            color: inherit;
+
+            cursor: pointer;
+        }
+
+        .remove-btn:hover {
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.10
+                );
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .result-card {
+            margin-top: 30px;
+
+            padding: 25px;
+
+            border-radius: 18px;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.06
+                );
+
+            border:
+                1px solid rgba(
+                    255,
+                    255,
+                    255,
+                    0.08
+                );
+
+            text-align: center;
+        }
+
+        .result-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+
+            margin-top: 20px;
+        }
+
+        .result-box {
+            padding: 20px;
+
+            border-radius: 15px;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.05
+                );
+        }
+
+        .result-number {
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        .result-label {
+            font-size: 13px;
+            opacity: 0.65;
+            margin-top: 5px;
+        }
+
+        .info-box {
+            margin-top: 20px;
+
+            padding: 15px;
+
+            border-radius: 12px;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.04
+                );
+
+            font-size: 14px;
+
+            line-height: 1.6;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        @media (max-width: 700px) {
+
+            .cgpa-page {
+                padding: 25px 12px;
+            }
+
+            .cgpa-card {
+                padding: 20px 15px;
+            }
+
+            .subject-row {
+                grid-template-columns: 1fr;
+            }
+
+            .remove-btn {
+                height: 40px;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     NAVBAR
+========================================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        NEXORA
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/student-tools">
+            Student Tools
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<main class="cgpa-page">
+
+
+    <!-- =========================================
+         HEADER
+    ========================================== -->
+
+    <div class="cgpa-header">
+
+        <p class="welcome-text">
+            NEXORA STUDENT TOOLS
+        </p>
+
+        <h1>
+            CGPA Calculator 🎓
+        </h1>
+
+        <p>
+            Calculate CGPA and estimated percentage.
+        </p>
+
+    </div>
+
+
+
+    <!-- =========================================
+         CALCULATOR
+    ========================================== -->
+
+    <div class="cgpa-card">
+
+
+        <h2>
+            📚 Add Your Subjects
+        </h2>
+
+
+        <p style="opacity:0.7;">
+            Enter each subject's credit and grade point.
+        </p>
+
+
+        <!-- SUBJECTS -->
+
+        <div id="subjects">
+
+        </div>
+
+
+
+        <!-- ACTIONS -->
+
+        <div class="actions">
+
+            <button
+                class="calculate-btn"
+                onclick="addSubject()"
+                type="button"
+            >
+                ➕ Add Subject
+            </button>
+
+
+            <button
+                class="calculate-btn"
+                onclick="calculateCGPA()"
+                type="button"
+            >
+                🧮 Calculate CGPA
+            </button>
+
+
+            <button
+                class="calculate-btn"
+                onclick="resetCalculator()"
+                type="button"
+            >
+                ↻ Reset
+            </button>
+
+        </div>
+
+
+
+        <!-- =====================================
+             RESULT
+        ====================================== -->
+
+        <div
+            id="resultCard"
+            class="result-card"
+            style="display:none;"
+        >
+
+            <h2>
+                🎉 Your Result
+            </h2>
+
+
+            <div class="result-grid">
+
+
+                <div class="result-box">
+
+                    <div
+                        id="cgpaResult"
+                        class="result-number"
+                    >
+                        0.00
+                    </div>
+
+                    <div class="result-label">
+                        CGPA
+                    </div>
+
+                </div>
+
+
+
+                <div class="result-box">
+
+                    <div
+                        id="percentageResult"
+                        class="result-number"
+                    >
+                        0.00%
+                    </div>
+
+                    <div class="result-label">
+                        Estimated Percentage
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div
+                id="gradeMessage"
+                class="info-box"
+            ></div>
+
+
+        </div>
+
+
+
+        <div class="info-box">
+
+            💡 <strong>How it works:</strong><br>
+
+            CGPA =
+            Σ (Credit × Grade Point)
+            ÷
+            Σ Credits
+
+            <br><br>
+
+            Percentage estimate uses:
+
+            <strong>
+                CGPA × 9.5
+            </strong>
+
+            This is an estimate; your university may use a different conversion formula.
+
+        </div>
+
+
+    </div>
+
+
+
+    <a
+        href="/student-tools"
+        class="back-link"
+    >
+        ← Back to Student Tools
+    </a>
+
+
+</main>
+
+
+
+<script>
+
+
+// =====================================================
+// SUBJECT COUNT
+// =====================================================
+
+let subjectCount = 0;
+
+
+
+// =====================================================
+// ADD SUBJECT
+// =====================================================
+
+function addSubject(
+    name = "",
+    credit = "",
+    grade = ""
+) {
+
+
+    subjectCount++;
+
+
+    const container =
+        document.getElementById(
+            "subjects"
+        );
+
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.className =
+        "subject-row";
+
+
+    row.id =
+        `subject-${subjectCount}`;
+
+
+    row.innerHTML = `
+
+        <div class="input-group">
+
+            <label>
+                Subject
+            </label>
+
+            <input
+                type="text"
+                class="subject-name"
+                placeholder="Example: History"
+                value="${escapeHtml(name)}"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Credits
+            </label>
+
+            <input
+                type="number"
+                class="subject-credit"
+                min="0.5"
+                max="20"
+                step="0.5"
+                placeholder="4"
+                value="${escapeHtml(credit)}"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Grade Point
+            </label>
+
+            <select class="subject-grade">
+
+                <option value="">
+                    Select
+                </option>
+
+                <option value="10"
+                    ${grade === "10" ? "selected" : ""}>
+                    10 - O
+                </option>
+
+                <option value="9"
+                    ${grade === "9" ? "selected" : ""}>
+                    9 - A+
+                </option>
+
+                <option value="8"
+                    ${grade === "8" ? "selected" : ""}>
+                    8 - A
+                </option>
+
+                <option value="7"
+                    ${grade === "7" ? "selected" : ""}>
+                    7 - B+
+                </option>
+
+                <option value="6"
+                    ${grade === "6" ? "selected" : ""}>
+                    6 - B
+                </option>
+
+                <option value="5"
+                    ${grade === "5" ? "selected" : ""}>
+                    5 - C
+                </option>
+
+                <option value="4"
+                    ${grade === "4" ? "selected" : ""}>
+                    4 - D
+                </option>
+
+                <option value="0"
+                    ${grade === "0" ? "selected" : ""}>
+                    0 - F
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            class="remove-btn"
+            onclick="removeSubject(${subjectCount})"
+            type="button"
+        >
+            🗑️
+        </button>
+
+    `;
+
+
+    container.appendChild(
+        row
+    );
+
+}
+
+
+
+// =====================================================
+// REMOVE SUBJECT
+// =====================================================
+
+function removeSubject(
+    id
+) {
+
+
+    const row =
+        document.getElementById(
+            `subject-${id}`
+        );
+
+
+    if (row) {
+
+        row.remove();
+
+    }
+
+}
+
+
+
+// =====================================================
+// CALCULATE CGPA
+// =====================================================
+
+function calculateCGPA() {
+
+
+    const rows =
+        document.querySelectorAll(
+            ".subject-row"
+        );
+
+
+    if (
+        rows.length === 0
+    ) {
+
+        alert(
+            "Please add at least one subject."
+        );
+
+        return;
+
+    }
+
+
+    let totalCredits = 0;
+
+    let totalPoints = 0;
+
+    let valid = true;
+
+
+    rows.forEach(
+        row => {
+
+
+            const credit =
+                Number(
+                    row
+                    .querySelector(
+                        ".subject-credit"
+                    )
+                    .value
+                );
+
+
+            const grade =
+                Number(
+                    row
+                    .querySelector(
+                        ".subject-grade"
+                    )
+                    .value
+                );
+
+
+            if (
+                !Number.isFinite(
+                    credit
+                ) ||
+                credit <= 0 ||
+                !Number.isFinite(
+                    grade
+                )
+            ) {
+
+                valid = false;
+
+                return;
+
+            }
+
+
+            totalCredits +=
+                credit;
+
+
+            totalPoints +=
+                credit *
+                grade;
+
+        }
+    );
+
+
+    if (!valid) {
+
+        alert(
+            "Please enter valid credits and grade points for every subject."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        totalCredits <= 0
+    ) {
+
+        alert(
+            "Total credits must be greater than zero."
+        );
+
+        return;
+
+    }
+
+
+    const cgpa =
+        totalPoints /
+        totalCredits;
+
+
+    const percentage =
+        cgpa *
+        9.5;
+
+
+    document
+        .getElementById(
+            "cgpaResult"
+        )
+        .textContent =
+        cgpa.toFixed(2);
+
+
+    document
+        .getElementById(
+            "percentageResult"
+        )
+        .textContent =
+        percentage.toFixed(2) +
+        "%";
+
+
+    let message;
+
+
+    if (
+        cgpa >= 9
+    ) {
+
+        message =
+            "🔥 Excellent academic performance!";
+
+    }
+
+    else if (
+        cgpa >= 8
+    ) {
+
+        message =
+            "👏 Very good performance!";
+
+    }
+
+    else if (
+        cgpa >= 7
+    ) {
+
+        message =
+            "👍 Good performance. Keep improving!";
+
+    }
+
+    else if (
+        cgpa >= 6
+    ) {
+
+        message =
+            "💪 Keep working consistently.";
+
+    }
+
+    else {
+
+        message =
+            "📚 Focus on your weak subjects and keep practicing.";
+
+    }
+
+
+    document
+        .getElementById(
+            "gradeMessage"
+        )
+        .textContent =
+        message;
+
+
+    document
+        .getElementById(
+            "resultCard"
+        )
+        .style.display =
+        "block";
+
+
+    document
+        .getElementById(
+            "resultCard"
+        )
+        .scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+}
+
+
+
+// =====================================================
+// RESET
+// =====================================================
+
+function resetCalculator() {
+
+
+    document
+        .getElementById(
+            "subjects"
+        )
+        .innerHTML = "";
+
+
+    subjectCount = 0;
+
+
+    document
+        .getElementById(
+            "resultCard"
+        )
+        .style.display =
+        "none";
+
+
+    addSubject();
+
+    addSubject();
+
+    addSubject();
+
+}
+
+
+
+// =====================================================
+// ESCAPE HTML
+// =====================================================
+
+function escapeHtml(
+    text
+) {
+
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        String(text);
+
+
+    return div.innerHTML;
+
+}
+
+
+
+// =====================================================
+// INITIALIZE
+// =====================================================
+
+addSubject();
+
+addSubject();
+
+addSubject();
+
+
+</script>
+
+
+</body>
+
+</html>

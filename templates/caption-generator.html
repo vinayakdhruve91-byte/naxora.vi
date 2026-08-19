@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>AI Caption Generator | NEXORA</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     NAVBAR
+========================================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        NEXORA
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/creator-tools">
+            Creator Tools
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =========================================
+     MAIN
+========================================= -->
+
+<main class="creator-tool-page">
+
+
+    <!-- HEADER -->
+
+    <div class="creator-tool-header">
+
+        <p class="welcome-text">
+            NEXORA AI CREATOR LAB
+        </p>
+
+        <h1>
+            AI Caption Generator ✍️
+        </h1>
+
+        <p>
+            Create original captions using AI.
+        </p>
+
+    </div>
+
+
+
+    <!-- =====================================
+         GENERATOR LAYOUT
+    ====================================== -->
+
+    <div class="generator-layout">
+
+
+        <!-- =================================
+             INPUT PANEL
+        ================================== -->
+
+        <div class="generator-card">
+
+
+            <!-- PLATFORM -->
+
+            <div class="input-group">
+
+                <label for="platform">
+                    Platform
+                </label>
+
+                <select id="platform">
+
+                    <option value="Instagram">
+                        Instagram
+                    </option>
+
+                    <option value="YouTube">
+                        YouTube
+                    </option>
+
+                    <option value="Facebook">
+                        Facebook
+                    </option>
+
+                    <option value="YouTube Shorts">
+                        YouTube Shorts
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- TOPIC -->
+
+            <div class="input-group">
+
+                <label for="topic">
+                    What is your content about?
+                </label>
+
+                <textarea
+                    id="topic"
+                    rows="5"
+                    maxlength="1000"
+                    placeholder="Example: My new gaming setup..."
+                ></textarea>
+
+                <small
+                    id="topicCount"
+                    style="color:#666; display:block; margin-top:6px;"
+                >
+                    0 / 1000
+                </small>
+
+            </div>
+
+
+
+            <!-- STYLE -->
+
+            <div class="input-group">
+
+                <label for="style">
+                    Caption Style
+                </label>
+
+                <select id="style">
+
+                    <option value="Trendy">
+                        🔥 Trendy
+                    </option>
+
+                    <option value="Funny">
+                        😂 Funny
+                    </option>
+
+                    <option value="Professional">
+                        💼 Professional
+                    </option>
+
+                    <option value="Motivational">
+                        🚀 Motivational
+                    </option>
+
+                    <option value="Storytelling">
+                        📖 Storytelling
+                    </option>
+
+                    <option value="Casual">
+                        😎 Casual
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- LENGTH -->
+
+            <div class="input-group">
+
+                <label for="length">
+                    Caption Length
+                </label>
+
+                <select id="length">
+
+                    <option value="Short">
+                        Short
+                    </option>
+
+                    <option value="Medium" selected>
+                        Medium
+                    </option>
+
+                    <option value="Long">
+                        Long
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- HASHTAGS -->
+
+            <div class="input-group">
+
+                <label for="hashtags">
+                    Hashtags
+                </label>
+
+                <select id="hashtags">
+
+                    <option value="yes">
+                        Yes, include hashtags
+                    </option>
+
+                    <option value="no">
+                        No hashtags
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- GENERATE BUTTON -->
+
+            <button
+                id="generateBtn"
+                class="calculate-btn"
+                onclick="generateCaption()"
+            >
+
+                ✨ Generate AI Caption
+
+            </button>
+
+
+        </div>
+
+
+
+        <!-- =================================
+             RESULT PANEL
+        ================================== -->
+
+        <div class="generator-result">
+
+
+            <!-- RESULT HEADER -->
+
+            <div class="result-header">
+
+                <span>
+                    AI GENERATED CAPTION
+                </span>
+
+                <button
+                    id="copyBtn"
+                    onclick="copyCaption()"
+                    class="copy-btn"
+                    type="button"
+                >
+                    📋 Copy
+                </button>
+
+            </div>
+
+
+
+            <!-- OUTPUT -->
+
+            <div
+                id="captionOutput"
+                class="caption-output"
+            >
+
+                <div class="empty-script">
+
+                    🤖
+
+                    <h3>
+                        Your AI caption will appear here
+                    </h3>
+
+                    <p>
+                        Enter your topic and generate a caption.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ACTION -->
+
+            <button
+                id="regenerateBtn"
+                class="regenerate-btn"
+                onclick="generateCaption()"
+                type="button"
+            >
+                🔄 Generate Another
+            </button>
+
+
+
+            <!-- MESSAGE -->
+
+            <p
+                id="copyMessage"
+                class="copy-message"
+            ></p>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- BACK -->
+
+    <a
+        href="/creator-tools"
+        class="back-dashboard"
+    >
+        ← Back to Creator Tools
+    </a>
+
+
+</main>
+
+
+
+<!-- =========================================
+     JAVASCRIPT
+========================================= -->
+
+<script>
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const topicInput =
+    document.getElementById("topic");
+
+const topicCount =
+    document.getElementById("topicCount");
+
+const generateBtn =
+    document.getElementById("generateBtn");
+
+const regenerateBtn =
+    document.getElementById("regenerateBtn");
+
+const captionOutput =
+    document.getElementById("captionOutput");
+
+const copyMessage =
+    document.getElementById("copyMessage");
+
+
+
+/* =========================================
+   TOPIC CHARACTER COUNTER
+========================================= */
+
+topicInput.addEventListener(
+    "input",
+    function () {
+
+        topicCount.textContent =
+            `${topicInput.value.length} / 1000`;
+
+    }
+);
+
+
+
+/* =========================================
+   GENERATE CAPTION
+========================================= */
+
+async function generateCaption() {
+
+
+    const platform =
+        document
+        .getElementById("platform")
+        .value;
+
+
+    const topic =
+        document
+        .getElementById("topic")
+        .value
+        .trim();
+
+
+    const style =
+        document
+        .getElementById("style")
+        .value;
+
+
+    const length =
+        document
+        .getElementById("length")
+        .value;
+
+
+    const hashtags =
+        document
+        .getElementById("hashtags")
+        .value;
+
+
+
+    /* VALIDATION */
+
+    if (!topic) {
+
+        alert(
+            "Please enter your content topic."
+        );
+
+        topicInput.focus();
+
+        return;
+
+    }
+
+
+
+    /* LOADING */
+
+    generateBtn.disabled = true;
+
+    regenerateBtn.disabled = true;
+
+    generateBtn.textContent =
+        "🤖 Generating...";
+
+    regenerateBtn.textContent =
+        "⏳ Please wait...";
+
+
+    captionOutput.innerHTML = `
+
+        <div class="empty-script">
+
+            🤖
+
+            <h3>
+                AI is generating your caption...
+            </h3>
+
+            <p>
+                Please wait a moment.
+            </p>
+
+        </div>
+
+    `;
+
+
+    copyMessage.textContent = "";
+
+
+
+    try {
+
+
+        /* =================================
+           API REQUEST
+        ================================== */
+
+        const response =
+            await fetch(
+                "/api/generate-caption",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            platform:
+                                platform,
+
+                            topic:
+                                topic,
+
+                            style:
+                                style,
+
+                            length:
+                                length
+
+                        })
+
+                }
+            );
+
+
+
+        /* =================================
+           READ RESPONSE
+        ================================== */
+
+        const data =
+            await response.json();
+
+
+
+        /* =================================
+           ERROR
+        ================================== */
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+
+                data.message ||
+                "AI generation failed."
+
+            );
+
+        }
+
+
+
+        /* =================================
+           CAPTION
+        ================================== */
+
+        let caption =
+            data.caption ||
+            "";
+
+
+
+        /* =================================
+           HASHTAGS
+        ================================== */
+
+        if (
+            hashtags === "yes"
+        ) {
+
+            caption += `
+
+#ContentCreator
+#CreatorLife
+#ContentCreation
+#SocialMedia
+#Trending
+`;
+
+        }
+
+
+
+        /* =================================
+           DISPLAY
+        ================================== */
+
+        captionOutput.textContent =
+            caption.trim();
+
+
+
+    }
+
+    catch (error) {
+
+
+        console.error(
+            "Caption Error:",
+            error
+        );
+
+
+        captionOutput.innerHTML = `
+
+            <div class="empty-script">
+
+                ❌
+
+                <h3>
+                    Something went wrong
+                </h3>
+
+                <p>
+                    ${escapeHtml(
+                        error.message
+                    )}
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+    finally {
+
+
+        /* RESTORE BUTTONS */
+
+        generateBtn.disabled =
+            false;
+
+        regenerateBtn.disabled =
+            false;
+
+
+        generateBtn.textContent =
+            "✨ Generate AI Caption";
+
+        regenerateBtn.textContent =
+            "🔄 Generate Another";
+
+    }
+
+}
+
+
+
+/* =========================================
+   COPY CAPTION
+========================================= */
+
+async function copyCaption() {
+
+
+    const text =
+        captionOutput.textContent.trim();
+
+
+
+    if (
+        !text ||
+        text.includes(
+            "Your AI caption will appear here"
+        ) ||
+        text.includes(
+            "AI is generating"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+
+    try {
+
+
+        await navigator
+            .clipboard
+            .writeText(text);
+
+
+        copyMessage.textContent =
+            "✓ Caption copied successfully!";
+
+
+        setTimeout(
+            function () {
+
+                copyMessage.textContent =
+                    "";
+
+            },
+            2500
+        );
+
+
+    }
+
+    catch (error) {
+
+
+        copyMessage.textContent =
+            "❌ Unable to copy caption.";
+
+    }
+
+}
+
+
+
+/* =========================================
+   BASIC HTML ESCAPE
+========================================= */
+
+function escapeHtml(text) {
+
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        text;
+
+
+    return div.innerHTML;
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

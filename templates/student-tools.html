@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>NEXORA | AI Study Tools</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            color: #fff;
+
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(0, 120, 255, 0.14),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 35%,
+                    rgba(150, 60, 255, 0.13),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 50% 100%,
+                    rgba(0, 220, 255, 0.08),
+                    transparent 35%
+                ),
+                #03050d;
+
+            overflow-x: hidden;
+        }
+
+
+        /* ================================
+           BACKGROUND LINES
+        ================================= */
+
+        body::before {
+            content: "";
+
+            position: fixed;
+
+            width: 420px;
+            height: 220px;
+
+            top: -40px;
+            left: -100px;
+
+            border-radius: 50%;
+
+            border-top:
+                1px solid
+                rgba(70, 140, 255, 0.22);
+
+            border-bottom:
+                1px solid
+                rgba(120, 80, 255, 0.12);
+
+            transform: rotate(-18deg);
+
+            filter: blur(1px);
+
+            pointer-events: none;
+        }
+
+
+        body::after {
+            content: "";
+
+            position: fixed;
+
+            width: 450px;
+            height: 230px;
+
+            right: -120px;
+            top: 30px;
+
+            border-radius: 50%;
+
+            border-top:
+                1px solid
+                rgba(90, 120, 255, 0.18);
+
+            transform: rotate(18deg);
+
+            pointer-events: none;
+        }
+
+
+        /* ================================
+           MAIN
+        ================================= */
+
+        .container {
+            width: min(1250px, 94%);
+
+            margin: auto;
+
+            padding:
+                28px 0 110px;
+        }
+
+
+        /* ================================
+           HEADER
+        ================================= */
+
+        .hero {
+            text-align: center;
+
+            padding:
+                10px 0 35px;
+        }
+
+
+        .robot {
+            font-size: 62px;
+
+            display: inline-block;
+
+            margin-right: 10px;
+
+            filter:
+                drop-shadow(
+                    0 0 15px
+                    rgba(60, 180, 255, 0.7)
+                );
+
+            animation:
+                floatRobot 3s
+                ease-in-out
+                infinite;
+        }
+
+
+        @keyframes floatRobot {
+
+            0%, 100% {
+                transform:
+                    translateY(0);
+            }
+
+            50% {
+                transform:
+                    translateY(-7px);
+            }
+
+        }
+
+
+        .title {
+            display: inline-block;
+
+            vertical-align: middle;
+
+            font-size:
+                clamp(42px, 6vw, 66px);
+
+            font-weight: 900;
+
+            letter-spacing: -2px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #ffffff 15%,
+                    #ffffff 40%,
+                    #69caff 65%,
+                    #b16cff 85%
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+
+        .subtitle {
+            margin-top: 5px;
+
+            color:
+                #7180d6;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            letter-spacing: 4px;
+
+            text-transform: uppercase;
+        }
+
+
+        /* ================================
+           SECTION
+        ================================= */
+
+        .section {
+            margin-top: 25px;
+
+            margin-bottom: 38px;
+        }
+
+
+        .section-heading {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .line {
+            flex: 1;
+
+            height: 1px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(130, 140, 255, 0.4)
+                );
+        }
+
+
+        .line.right {
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(130, 140, 255, 0.4),
+                    transparent
+                );
+        }
+
+
+        .section-heading h2 {
+            white-space: nowrap;
+
+            font-size: 23px;
+
+            letter-spacing: 2px;
+
+            color:
+                #62aaff;
+
+            text-shadow:
+                0 0 15px
+                rgba(70, 150, 255, 0.35);
+        }
+
+
+        .section-heading h2 span {
+            color:
+                #bd82ff;
+        }
+
+
+        /* ================================
+           GRID
+        ================================= */
+
+        .tools-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 22px;
+        }
+
+
+        /* ================================
+           CARD
+        ================================= */
+
+        .tool-card {
+            position: relative;
+
+            min-height: 325px;
+
+            padding: 30px;
+
+            border-radius: 24px;
+
+            text-decoration: none;
+
+            color: white;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,0.075),
+                    rgba(255,255,255,0.025)
+                );
+
+            border:
+                1px solid
+                rgba(255,255,255,0.13);
+
+            box-shadow:
+                0 20px 50px
+                rgba(0,0,0,0.35),
+
+                inset 0 1px 0
+                rgba(255,255,255,0.08);
+
+            backdrop-filter:
+                blur(16px);
+
+            transition:
+                transform .25s ease,
+                box-shadow .25s ease;
+        }
+
+
+        .tool-card:hover {
+            transform:
+                translateY(-9px);
+
+            box-shadow:
+                0 25px 65px
+                rgba(0,0,0,0.45);
+        }
+
+
+        /* CARD GLOW */
+
+        .tool-card::after {
+            content: "";
+
+            position: absolute;
+
+            width: 170px;
+            height: 170px;
+
+            right: -75px;
+            top: -75px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    var(--glow),
+                    transparent 68%
+                );
+
+            opacity: .16;
+
+            pointer-events: none;
+        }
+
+
+        /* ================================
+           ICON
+        ================================= */
+
+        .icon {
+            width: 72px;
+            height: 72px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            font-size: 35px;
+
+            margin-bottom: 25px;
+
+            background:
+                rgba(255,255,255,0.045);
+
+            border:
+                1px solid
+                var(--accent);
+
+            box-shadow:
+                0 0 25px
+                var(--shadow);
+        }
+
+
+        .tool-card h3 {
+            font-size: 22px;
+
+            margin-bottom: 13px;
+        }
+
+
+        .tool-card p {
+            min-height: 60px;
+
+            color:
+                rgba(255,255,255,0.66);
+
+            line-height: 1.6;
+
+            font-size: 15px;
+        }
+
+
+        /* ================================
+           BUTTON
+        ================================= */
+
+        .use-btn {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin-top: 22px;
+
+            padding:
+                11px 20px;
+
+            border-radius: 9px;
+
+            color:
+                var(--accent);
+
+            border:
+                1px solid
+                var(--accent);
+
+            background:
+                rgba(255,255,255,0.025);
+
+            font-weight: 700;
+
+            transition:
+                background .2s,
+                box-shadow .2s;
+        }
+
+
+        .tool-card:hover .use-btn {
+            background:
+                var(--button-bg);
+
+            box-shadow:
+                0 0 20px
+                var(--shadow);
+        }
+
+
+        .arrow {
+            font-size: 20px;
+        }
+
+
+        /* ================================
+           CARD COLORS
+        ================================= */
+
+        .blue {
+            --accent: #36a7ff;
+            --glow: #168dff;
+            --shadow: rgba(30,150,255,.35);
+            --button-bg: rgba(30,150,255,.10);
+        }
+
+
+        .purple {
+            --accent: #d36cff;
+            --glow: #bd43ff;
+            --shadow: rgba(190,60,255,.35);
+            --button-bg: rgba(190,60,255,.10);
+        }
+
+
+        .yellow {
+            --accent: #ffc52f;
+            --glow: #ffb000;
+            --shadow: rgba(255,180,20,.30);
+            --button-bg: rgba(255,180,20,.08);
+        }
+
+
+        .cyan {
+            --accent: #16e5ef;
+            --glow: #00d8ff;
+            --shadow: rgba(0,220,255,.30);
+            --button-bg: rgba(0,220,255,.08);
+        }
+
+
+        .pink {
+            --accent: #ff55c8;
+            --glow: #ff28bd;
+            --shadow: rgba(255,40,190,.30);
+            --button-bg: rgba(255,40,190,.08);
+        }
+
+
+        .green {
+            --accent: #75f36b;
+            --glow: #42e950;
+            --shadow: rgba(60,230,70,.30);
+            --button-bg: rgba(60,230,70,.08);
+        }
+
+
+        /* ================================
+           FOOTER
+        ================================= */
+
+        .footer {
+            position: fixed;
+
+            left: 50%;
+
+            bottom: 15px;
+
+            transform:
+                translateX(-50%);
+
+            width:
+                min(1200px, 92%);
+
+            min-height: 76px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            gap: 20px;
+
+            padding:
+                12px 20px;
+
+            border-radius: 22px;
+
+            background:
+                rgba(5,9,22,0.88);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.13);
+
+            box-shadow:
+                0 15px 45px
+                rgba(0,0,0,.5);
+
+            backdrop-filter:
+                blur(20px);
+
+            z-index: 100;
+        }
+
+
+        .brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+
+        .brand-logo {
+            font-size: 38px;
+
+            font-weight: 900;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #52d6ff,
+                    #a65bff
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+
+        .brand-name {
+            font-size: 16px;
+
+            font-weight: 800;
+        }
+
+
+        .brand-text {
+            font-size: 12px;
+
+            color:
+                rgba(255,255,255,.5);
+
+            margin-top: 4px;
+        }
+
+
+        .footer-links {
+            display: flex;
+
+            gap: 12px;
+        }
+
+
+        .footer-link {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            min-width: 145px;
+
+            justify-content: center;
+
+            padding:
+                12px 20px;
+
+            border-radius: 10px;
+
+            color: white;
+
+            text-decoration: none;
+
+            border:
+                1px solid
+                rgba(255,255,255,.11);
+
+            background:
+                rgba(255,255,255,.025);
+
+            transition: .2s;
+        }
+
+
+        .footer-link:hover {
+            border-color:
+                #4caaff;
+
+            box-shadow:
+                0 0 20px
+                rgba(50,150,255,.15);
+        }
+
+
+        .footer-link.active {
+            border-color:
+                #399dff;
+
+            box-shadow:
+                0 0 22px
+                rgba(50,150,255,.25);
+        }
+
+
+        /* ================================
+           DEV
+        ================================= */
+
+        .dev-credit {
+            position: fixed;
+
+            right: 17px;
+
+            bottom: 5px;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            font-style: italic;
+
+            letter-spacing: 1px;
+
+            color: #dc8cff;
+
+            text-shadow:
+                0 0 5px #a52fff,
+                0 0 12px #ff32d0;
+
+            z-index: 200;
+
+            animation:
+                glow 2s
+                ease-in-out
+                infinite
+                alternate;
+        }
+
+
+        @keyframes glow {
+
+            from {
+                opacity: .45;
+            }
+
+            to {
+                opacity: 1;
+            }
+
+        }
+
+
+        /* ================================
+           RESPONSIVE
+        ================================= */
+
+        @media(max-width: 950px) {
+
+            .tools-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .footer {
+                position: relative;
+
+                left: auto;
+                bottom: auto;
+
+                transform: none;
+
+                margin:
+                    30px auto 20px;
+            }
+
+        }
+
+
+        @media(max-width: 650px) {
+
+            .container {
+                width: 92%;
+            }
+
+            .robot {
+                font-size: 45px;
+            }
+
+            .title {
+                font-size: 38px;
+            }
+
+            .subtitle {
+                font-size: 11px;
+                letter-spacing: 2px;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-heading h2 {
+                font-size: 18px;
+            }
+
+            .footer {
+                flex-direction: column;
+            }
+
+            .footer-links {
+                width: 100%;
+            }
+
+            .footer-link {
+                flex: 1;
+                min-width: 0;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- ============================
+         HEADER
+    ============================= -->
+
+    <header class="hero">
+
+        <div>
+
+            <span class="robot">
+                🤖
+            </span>
+
+            <h1 class="title">
+                AI Study Tools
+            </h1>
+
+        </div>
+
+
+        <p class="subtitle">
+            Study smarter with NEXORA AI.
+        </p>
+
+    </header>
+
+
+
+    <!-- ============================
+         AI TOOLS
+    ============================= -->
+
+    <section class="section">
+
+
+        <div class="section-heading">
+
+            <div class="line"></div>
+
+            <h2>
+                ✦ &nbsp; AI POWERED
+                <span>TOOLS</span>
+                &nbsp; ✦
+            </h2>
+
+            <div class="line right"></div>
+
+        </div>
+
+
+        <div class="tools-grid">
+
+
+            <!-- MCQ -->
+
+            <a
+                href="/mcq-generator"
+                class="tool-card blue"
+            >
+
+                <div class="icon">
+                    ❓
+                </div>
+
+                <h3>
+                    AI MCQ Generator
+                </h3>
+
+                <p>
+                    Generate topic-wise MCQs in
+                    Hindi, English or Hinglish.
+                </p>
+
+                <div class="use-btn">
+                    Use Now
+                    <span class="arrow">→</span>
+                </div>
+
+            </a>
+
+
+
+            <!-- STUDY PLANNER -->
+
+            <a
+                href="/study-planner"
+                class="tool-card purple"
+            >
+
+                <div class="icon">
+                    📋
+                </div>
+
+                <h3>
+                    AI Study Planner
+                </h3>
+
+                <p>
+                    Build a personalized study
+                    plan using AI.
+                </p>
+
+                <div class="use-btn">
+                    Use Now
+                    <span class="arrow">→</span>
+                </div>
+
+            </a>
+
+
+
+            <!-- CONTENT -->
+
+            <a
+                href="/content-ideas"
+                class="tool-card yellow"
+            >
+
+                <div class="icon">
+                    💡
+                </div>
+
+                <h3>
+                    Content Ideas
+                </h3>
+
+                <p>
+                    Generate creative ideas for
+                    projects and content.
+                </p>
+
+                <div class="use-btn">
+                    Use Now
+                    <span class="arrow">→</span>
+                </div>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ============================
+         STUDY ESSENTIALS
+    ============================= -->
+
+    <section class="section">
+
+
+        <div class="section-heading">
+
+            <div class="line"></div>
+
+            <h2>
+                📖 &nbsp;
+                <span>STUDY</span>
+                ESSENTIALS
+                &nbsp; ✦
+            </h2>
+
+            <div class="line right"></div>
+
+        </div>
+
+
+        <div class="tools-grid">
+
+
+            <!-- TIMER -->
+
+            <a
+                href="/study-timer"
+                class="tool-card cyan"
+            >
+
+                <div class="icon">
+                    ⏱️
+                </div>
+
+                <h3>
+                    Study Timer
+                </h3>
+
+                <p>
+                    Focus sessions, breaks, sound
+                    and notifications.
+                </p>
+
+                <div class="use-btn">
+                    Start Timer
+                    <span class="arrow">→</span>
+                </div>
+
+            </a>
+
+
+
+            <!-- COUNTDOWN -->
+
+            <a
+                href="/exam-countdown"
+                class="tool-card pink"
+            >
+
+                <div class="icon">
+                    📅
+                </div>
+
+                <h3>
+                    Exam Countdown
+                </h3>
+
+                <p>
+                    Track the exact time remaining
+                    for your exam.
+                </p>
+
+                <div class="use-btn">
+                    View Countdown
+                    <span class="arrow">→</span>
+                </div>
+
+            </a>
+
+
+
+            <!-- PLANNER -->
+
+            <a
+                href="/study-planner"
+                class="tool-card green"
+            >
+
+                <div class="icon">
+                    🗓️
+                </div>
+
+                <h3>
+                    Study Planner
+                </h3>
+
+                <p>
+                    Organize subjects, tasks and
+                    daily targets.
+                </p>
+
+                <div class="use-btn">
+                    Open Planner
+                    <span class="arrow">→</span>
+                </div>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+</div>
+
+
+
+<!-- ================================
+     FOOTER
+================================= -->
+
+<footer class="footer">
+
+
+    <div class="brand">
+
+        <div class="brand-logo">
+            N
+        </div>
+
+        <div>
+
+            <div class="brand-name">
+                NEXORA AI
+            </div>
+
+            <div class="brand-text">
+                Your AI study companion for success.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-links">
+
+        <a
+            href="/dashboard"
+            class="footer-link active"
+        >
+            🏠
+            Dashboard
+        </a>
+
+
+        <a
+            href="/profile"
+            class="footer-link"
+        >
+            👤
+            Profile
+        </a>
+
+    </div>
+
+
+</footer>
+
+
+
+<div class="dev-credit">
+    dev-vinayak
+</div>
+
+
+</body>
+
+</html>

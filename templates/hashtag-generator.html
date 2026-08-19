@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>AI Hashtag Generator | NEXORA</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+        NEXORA
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/creator-tools">
+            Creator Tools
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<main class="creator-tool-page">
+
+
+    <!-- HEADER -->
+
+    <div class="creator-tool-header">
+
+        <p class="welcome-text">
+            NEXORA AI CREATOR LAB
+        </p>
+
+
+        <h1>
+            AI Hashtag Generator #️⃣
+        </h1>
+
+
+        <p>
+            Generate relevant hashtags for your content.
+        </p>
+
+    </div>
+
+
+
+    <div class="generator-layout">
+
+
+        <!-- =================================
+             INPUT PANEL
+        ================================== -->
+
+        <div class="generator-card">
+
+
+            <!-- NICHE -->
+
+            <div class="input-group">
+
+                <label>
+                    Your Niche
+                </label>
+
+
+                <input
+                    id="niche"
+                    type="text"
+                    maxlength="200"
+                    placeholder="Example: Gaming"
+                >
+
+            </div>
+
+
+
+            <!-- PLATFORM -->
+
+            <div class="input-group">
+
+                <label>
+                    Platform
+                </label>
+
+
+                <select id="platform">
+
+                    <option value="Instagram">
+                        Instagram
+                    </option>
+
+
+                    <option value="YouTube">
+                        YouTube
+                    </option>
+
+
+                    <option value="YouTube Shorts">
+                        YouTube Shorts
+                    </option>
+
+
+                    <option value="Facebook">
+                        Facebook
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- TOPIC -->
+
+            <div class="input-group">
+
+                <label>
+                    Content Topic
+                </label>
+
+
+                <textarea
+                    id="topic"
+                    rows="4"
+                    maxlength="500"
+                    placeholder="Example: My new gaming PC setup..."
+                ></textarea>
+
+            </div>
+
+
+
+            <!-- NUMBER -->
+
+            <div class="input-group">
+
+                <label>
+                    Number of Hashtags
+                </label>
+
+
+                <select id="count">
+
+                    <option value="10">
+                        10 Hashtags
+                    </option>
+
+
+                    <option
+                        value="20"
+                        selected
+                    >
+                        20 Hashtags
+                    </option>
+
+
+                    <option value="25">
+                        25 Hashtags
+                    </option>
+
+
+                    <option value="30">
+                        30 Hashtags
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- BUTTON -->
+
+            <button
+                id="generateBtn"
+                class="calculate-btn"
+                onclick="generateHashtags()"
+            >
+
+                ✨ Generate AI Hashtags
+
+            </button>
+
+
+        </div>
+
+
+
+        <!-- =================================
+             RESULT PANEL
+        ================================== -->
+
+        <div class="generator-result">
+
+
+            <div class="result-header">
+
+                <span>
+                    AI GENERATED HASHTAGS
+                </span>
+
+
+                <button
+                    class="copy-btn"
+                    onclick="copyHashtags()"
+                    type="button"
+                >
+
+                    📋 Copy All
+
+                </button>
+
+            </div>
+
+
+
+            <div
+                id="hashtagOutput"
+                class="caption-output"
+            >
+
+                <div class="empty-script">
+
+                    #️⃣
+
+
+                    <h3>
+                        Your AI hashtags will appear here
+                    </h3>
+
+
+                    <p>
+                        Enter your niche and generate hashtags.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <button
+                id="regenerateBtn"
+                class="regenerate-btn"
+                onclick="generateHashtags()"
+                type="button"
+            >
+
+                🔄 Generate Again
+
+            </button>
+
+
+
+            <p
+                id="copyMessage"
+                class="copy-message"
+            ></p>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- BACK -->
+
+    <a
+        href="/creator-tools"
+        class="back-dashboard"
+    >
+
+        ← Back to Creator Tools
+
+    </a>
+
+
+</main>
+
+
+
+<script>
+
+
+// =====================================================
+// GENERATE HASHTAGS
+// =====================================================
+
+async function generateHashtags() {
+
+
+    const niche =
+        document
+        .getElementById("niche")
+        .value
+        .trim();
+
+
+    const platform =
+        document
+        .getElementById("platform")
+        .value;
+
+
+    const topic =
+        document
+        .getElementById("topic")
+        .value
+        .trim();
+
+
+    const count =
+        Number(
+            document
+            .getElementById("count")
+            .value
+        );
+
+
+    const output =
+        document
+        .getElementById("hashtagOutput");
+
+
+    const generateBtn =
+        document
+        .getElementById("generateBtn");
+
+
+    const regenerateBtn =
+        document
+        .getElementById("regenerateBtn");
+
+
+    const copyMessage =
+        document
+        .getElementById("copyMessage");
+
+
+
+    // VALIDATION
+
+    if (!niche) {
+
+        alert(
+            "Please enter your niche."
+        );
+
+        return;
+
+    }
+
+
+
+    // LOADING
+
+    generateBtn.disabled = true;
+
+    regenerateBtn.disabled = true;
+
+
+    generateBtn.textContent =
+        "🤖 Generating...";
+
+
+    output.innerHTML = `
+
+        <div class="empty-script">
+
+            🤖
+
+
+            <h3>
+                AI is finding relevant hashtags...
+            </h3>
+
+
+            <p>
+                Please wait.
+            </p>
+
+        </div>
+
+    `;
+
+
+    copyMessage.textContent = "";
+
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                "/api/generate-hashtags",
+                {
+
+                    method: "POST",
+
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+
+                    body:
+                        JSON.stringify({
+
+                            niche:
+                                niche,
+
+                            platform:
+                                platform,
+
+                            topic:
+                                topic,
+
+                            count:
+                                count
+
+                        })
+
+                }
+            );
+
+
+
+        const data =
+            await response.json();
+
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Hashtag generation failed."
+            );
+
+        }
+
+
+
+        output.textContent =
+            data.hashtags;
+
+
+    }
+
+
+    catch (error) {
+
+
+        output.innerHTML = `
+
+            <div class="empty-script">
+
+                ❌
+
+
+                <h3>
+                    Something went wrong
+                </h3>
+
+
+                <p>
+                    ${error.message}
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+
+    finally {
+
+
+        generateBtn.disabled = false;
+
+        regenerateBtn.disabled = false;
+
+
+        generateBtn.textContent =
+            "✨ Generate AI Hashtags";
+
+    }
+
+}
+
+
+
+// =====================================================
+// COPY HASHTAGS
+// =====================================================
+
+async function copyHashtags() {
+
+
+    const output =
+        document
+        .getElementById("hashtagOutput");
+
+
+    const text =
+        output.textContent.trim();
+
+
+    if (!text) {
+
+        return;
+
+    }
+
+
+    try {
+
+
+        await navigator
+            .clipboard
+            .writeText(text);
+
+
+        document
+        .getElementById(
+            "copyMessage"
+        )
+        .textContent =
+            "✓ Hashtags copied!";
+
+
+    }
+
+
+    catch (error) {
+
+
+        document
+        .getElementById(
+            "copyMessage"
+        )
+        .textContent =
+            "❌ Unable to copy.";
+
+    }
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

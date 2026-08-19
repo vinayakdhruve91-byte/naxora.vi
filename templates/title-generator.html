@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>AI Title Generator | NEXORA</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+        NEXORA
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/creator-tools">
+            Creator Tools
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<main class="creator-tool-page">
+
+
+    <div class="creator-tool-header">
+
+        <p class="welcome-text">
+            NEXORA AI CREATOR LAB
+        </p>
+
+        <h1>
+            AI Title Generator 🎯
+        </h1>
+
+        <p>
+            Generate fresh and engaging titles with AI.
+        </p>
+
+    </div>
+
+
+    <div class="generator-layout">
+
+
+        <!-- INPUT -->
+
+        <div class="generator-card">
+
+
+            <div class="input-group">
+
+                <label>
+                    Platform
+                </label>
+
+                <select id="platform">
+
+                    <option value="YouTube">
+                        YouTube
+                    </option>
+
+                    <option value="Instagram">
+                        Instagram
+                    </option>
+
+                    <option value="YouTube Shorts">
+                        YouTube Shorts
+                    </option>
+
+                    <option value="Facebook">
+                        Facebook
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Video / Content Topic
+                </label>
+
+                <textarea
+                    id="topic"
+                    rows="5"
+                    maxlength="1000"
+                    placeholder="Example: My first gaming PC..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Title Style
+                </label>
+
+                <select id="style">
+
+                    <option value="Clickable">
+                        🔥 Clickable
+                    </option>
+
+                    <option value="Professional">
+                        💼 Professional
+                    </option>
+
+                    <option value="Funny">
+                        😂 Funny
+                    </option>
+
+                    <option value="Curiosity">
+                        👀 Curiosity
+                    </option>
+
+                    <option value="Educational">
+                        🎓 Educational
+                    </option>
+
+                    <option value="Short & Powerful">
+                        ⚡ Short & Powerful
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Number of Titles
+                </label>
+
+                <select id="count">
+
+                    <option value="5">
+                        5 Titles
+                    </option>
+
+                    <option value="10" selected>
+                        10 Titles
+                    </option>
+
+                    <option value="15">
+                        15 Titles
+                    </option>
+
+                    <option value="20">
+                        20 Titles
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                id="generateBtn"
+                class="calculate-btn"
+                onclick="generateTitles()"
+            >
+                ✨ Generate AI Titles
+            </button>
+
+
+        </div>
+
+
+        <!-- RESULT -->
+
+        <div class="generator-result">
+
+
+            <div class="result-header">
+
+                <span>
+                    AI GENERATED TITLES
+                </span>
+
+                <button
+                    class="copy-btn"
+                    onclick="copyTitles()"
+                >
+                    📋 Copy All
+                </button>
+
+            </div>
+
+
+            <div
+                id="titleOutput"
+                class="caption-output"
+            >
+
+                <div class="empty-script">
+
+                    🎯
+
+                    <h3>
+                        Your AI titles will appear here
+                    </h3>
+
+                    <p>
+                        Enter a topic and generate titles.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="regenerateBtn"
+                class="regenerate-btn"
+                onclick="generateTitles()"
+            >
+                🔄 Generate Again
+            </button>
+
+
+            <p
+                id="copyMessage"
+                class="copy-message"
+            ></p>
+
+
+        </div>
+
+
+    </div>
+
+
+    <a
+        href="/creator-tools"
+        class="back-dashboard"
+    >
+        ← Back to Creator Tools
+    </a>
+
+
+</main>
+
+
+
+<script>
+
+
+async function generateTitles() {
+
+
+    const platform =
+        document
+        .getElementById("platform")
+        .value;
+
+
+    const topic =
+        document
+        .getElementById("topic")
+        .value
+        .trim();
+
+
+    const style =
+        document
+        .getElementById("style")
+        .value;
+
+
+    const count =
+        Number(
+            document
+            .getElementById("count")
+            .value
+        );
+
+
+    const output =
+        document
+        .getElementById("titleOutput");
+
+
+    const generateBtn =
+        document
+        .getElementById("generateBtn");
+
+
+    const regenerateBtn =
+        document
+        .getElementById("regenerateBtn");
+
+
+    const copyMessage =
+        document
+        .getElementById("copyMessage");
+
+
+    if (!topic) {
+
+        alert(
+            "Please enter a topic."
+        );
+
+        return;
+
+    }
+
+
+    generateBtn.disabled = true;
+
+    regenerateBtn.disabled = true;
+
+
+    generateBtn.textContent =
+        "🤖 Generating...";
+
+
+    output.innerHTML = `
+
+        <div class="empty-script">
+
+            🤖
+
+            <h3>
+                AI is generating titles...
+            </h3>
+
+            <p>
+                Please wait.
+            </p>
+
+        </div>
+
+    `;
+
+
+    copyMessage.textContent = "";
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                "/api/generate-title",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            platform:
+                                platform,
+
+                            topic:
+                                topic,
+
+                            style:
+                                style,
+
+                            count:
+                                count
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Title generation failed."
+            );
+
+        }
+
+
+        output.textContent =
+            data.titles;
+
+
+    } catch (error) {
+
+
+        output.innerHTML = `
+
+            <div class="empty-script">
+
+                ❌
+
+                <h3>
+                    Something went wrong
+                </h3>
+
+                <p>
+                    ${error.message}
+                </p>
+
+            </div>
+
+        `;
+
+
+    } finally {
+
+
+        generateBtn.disabled = false;
+
+        regenerateBtn.disabled = false;
+
+        generateBtn.textContent =
+            "✨ Generate AI Titles";
+
+    }
+
+}
+
+
+
+async function copyTitles() {
+
+
+    const output =
+        document
+        .getElementById("titleOutput");
+
+
+    const text =
+        output.textContent.trim();
+
+
+    if (!text) {
+        return;
+    }
+
+
+    try {
+
+        await navigator
+            .clipboard
+            .writeText(text);
+
+
+        document
+        .getElementById(
+            "copyMessage"
+        )
+        .textContent =
+            "✓ Titles copied!";
+
+
+    } catch (error) {
+
+        document
+        .getElementById(
+            "copyMessage"
+        )
+        .textContent =
+            "❌ Unable to copy.";
+
+    }
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

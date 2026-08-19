@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NEXORA | Content Ideas</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    min-height:100vh;
+    font-family:Arial,Helvetica,sans-serif;
+    color:white;
+
+    background:
+        radial-gradient(circle at 10% 10%,rgba(255,190,40,.13),transparent 30%),
+        radial-gradient(circle at 90% 40%,rgba(180,60,255,.14),transparent 30%),
+        #03050d;
+
+    overflow-x:hidden;
+}
+
+.container{
+    width:min(1050px,94%);
+    margin:auto;
+    padding:35px 0 100px;
+}
+
+.back{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+
+    color:rgba(255,255,255,.65);
+    text-decoration:none;
+    font-size:14px;
+
+    margin-bottom:30px;
+    transition:.2s;
+}
+
+.back:hover{
+    color:white;
+    transform:translateX(-3px);
+}
+
+.hero{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.icon{
+    display:block;
+    font-size:60px;
+    margin-bottom:8px;
+
+    filter:drop-shadow(0 0 18px rgba(255,190,40,.55));
+}
+
+h1{
+    font-size:clamp(38px,6vw,58px);
+    font-weight:900;
+
+    background:
+        linear-gradient(
+            90deg,
+            #fff,
+            #ffd45c,
+            #c36cff
+        );
+
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+}
+
+.subtitle{
+    margin-top:9px;
+    color:#9d82d6;
+    letter-spacing:3px;
+    font-size:13px;
+    font-weight:700;
+}
+
+.generator{
+    padding:30px;
+
+    border-radius:25px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.075),
+            rgba(255,255,255,.025)
+        );
+
+    border:1px solid rgba(255,255,255,.13);
+
+    box-shadow:
+        0 25px 60px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.08);
+
+    backdrop-filter:blur(18px);
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+label{
+    font-size:13px;
+    color:rgba(255,255,255,.65);
+    font-weight:700;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:13px 14px;
+
+    border-radius:12px;
+    outline:none;
+
+    color:white;
+    background:rgba(3,7,25,.85);
+
+    border:1px solid rgba(255,255,255,.12);
+
+    font-size:14px;
+    transition:.2s;
+}
+
+input,
+select{
+    height:50px;
+}
+
+textarea{
+    min-height:120px;
+    resize:vertical;
+    line-height:1.5;
+}
+
+input::placeholder,
+textarea::placeholder{
+    color:rgba(255,255,255,.35);
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:#b06cff;
+
+    box-shadow:
+        0 0 20px rgba(170,70,255,.14);
+}
+
+select option{
+    background:#0b0e22;
+    color:white;
+}
+
+.generate-btn{
+    width:100%;
+    height:55px;
+
+    margin-top:25px;
+
+    border:none;
+    border-radius:13px;
+
+    cursor:pointer;
+
+    color:white;
+    font-size:16px;
+    font-weight:800;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff9f1a,
+            #ff4f9a,
+            #833cff
+        );
+
+    box-shadow:
+        0 12px 30px rgba(180,70,255,.25);
+
+    transition:.2s;
+}
+
+.generate-btn:hover{
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 18px 40px rgba(180,70,255,.38);
+}
+
+.generate-btn:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.loading{
+    display:none;
+    text-align:center;
+
+    margin-top:24px;
+
+    color:#ffc76b;
+    font-size:14px;
+}
+
+.spinner{
+    display:inline-block;
+
+    width:20px;
+    height:20px;
+
+    margin-right:8px;
+
+    vertical-align:middle;
+
+    border:3px solid rgba(255,255,255,.15);
+    border-top-color:#ffb52e;
+
+    border-radius:50%;
+
+    animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+.error{
+    display:none;
+
+    margin-top:20px;
+    padding:14px;
+
+    border-radius:12px;
+
+    color:#ff9da8;
+
+    background:rgba(255,60,80,.08);
+
+    border:1px solid rgba(255,60,80,.20);
+}
+
+.result{
+    display:none;
+    margin-top:30px;
+}
+
+.result-header{
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    gap:15px;
+
+    margin-bottom:18px;
+}
+
+.result-header h2{
+    font-size:23px;
+    color:#ffd47a;
+}
+
+.badge{
+    padding:8px 13px;
+
+    border-radius:10px;
+
+    color:#d2a0ff;
+
+    background:rgba(120,70,255,.12);
+
+    border:1px solid rgba(140,100,255,.25);
+
+    font-size:12px;
+}
+
+.idea{
+    padding:22px;
+    margin-bottom:16px;
+
+    border-radius:19px;
+
+    background:rgba(255,255,255,.045);
+
+    border:1px solid rgba(255,255,255,.09);
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,.18);
+}
+
+.idea-number{
+    color:#ffc34d;
+
+    font-size:12px;
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    margin-bottom:9px;
+}
+
+.idea-title{
+    font-size:18px;
+    font-weight:800;
+
+    margin-bottom:12px;
+}
+
+.idea-text{
+    color:rgba(255,255,255,.68);
+
+    line-height:1.6;
+    font-size:14px;
+}
+
+.dev-credit{
+    position:fixed;
+
+    right:17px;
+    bottom:7px;
+
+    font-size:10px;
+
+    font-weight:800;
+    font-style:italic;
+
+    letter-spacing:1px;
+
+    color:#dc8cff;
+
+    text-shadow:
+        0 0 5px #a52fff,
+        0 0 12px #ff32d0;
+
+    animation:
+        glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow{
+    from{
+        opacity:.45;
+    }
+
+    to{
+        opacity:1;
+    }
+}
+
+@media(max-width:700px){
+
+    .container{
+        width:92%;
+    }
+
+    .generator{
+        padding:20px;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .full{
+        grid-column:auto;
+    }
+
+    .result-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+<a href="/student-tools" class="back">
+    ← Back to AI Study Tools
+</a>
+
+
+<header class="hero">
+
+    <span class="icon">
+        💡
+    </span>
+
+    <h1>
+        Content Ideas
+    </h1>
+
+    <p class="subtitle">
+        Create • Inspire • Grow
+    </p>
+
+</header>
+
+
+<div class="generator">
+
+<div class="form-grid">
+
+
+<div class="field">
+
+<label>
+Content Topic
+</label>
+
+<input
+    id="topic"
+    type="text"
+    placeholder="e.g. History, Gaming, Education"
+/>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Platform
+</label>
+
+<select id="platform">
+
+<option value="Instagram">
+    📸 Instagram
+</option>
+
+<option value="YouTube">
+    ▶️ YouTube
+</option>
+
+<option value="Shorts">
+    🎬 YouTube Shorts
+</option>
+
+<option value="Blog">
+    📝 Blog
+</option>
+
+<option value="General">
+    🌐 General
+</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Content Type
+</label>
+
+<select id="contentType">
+
+<option value="Reels">
+    🎥 Reels
+</option>
+
+<option value="Educational">
+    📚 Educational
+</option>
+
+<option value="Entertainment">
+    😂 Entertainment
+</option>
+
+<option value="Tutorial">
+    🛠️ Tutorial
+</option>
+
+<option value="Story">
+    📖 Story
+</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Number of Ideas
+</label>
+
+<select id="count">
+
+<option value="5">
+    5 Ideas
+</option>
+
+<option value="10" selected>
+    10 Ideas
+</option>
+
+<option value="15">
+    15 Ideas
+</option>
+
+<option value="20">
+    20 Ideas
+</option>
+
+</select>
+
+</div>
+
+
+<div class="field full">
+
+<label>
+Extra Instructions
+</label>
+
+<textarea
+    id="instructions"
+    placeholder="Example: Make the ideas catchy, simple and suitable for students."
+></textarea>
+
+</div>
+
+
+</div>
+
+
+<button
+    id="generateBtn"
+    class="generate-btn"
+    onclick="generateIdeas()"
+>
+    ✨ Generate Content Ideas
+</button>
+
+
+<div id="loading" class="loading">
+
+<span class="spinner"></span>
+
+AI is generating creative ideas...
+
+</div>
+
+
+<div id="error" class="error"></div>
+
+
+<div id="result" class="result">
+
+<div class="result-header">
+
+<h2>
+    💡 Your Content Ideas
+</h2>
+
+<div id="ideaBadge" class="badge"></div>
+
+</div>
+
+<div id="ideas"></div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<div class="dev-credit">
+    dev-vinayak
+</div>
+
+
+<script>
+
+async function generateIdeas(){
+
+    const topic =
+        document
+        .getElementById("topic")
+        .value
+        .trim();
+
+    const platform =
+        document
+        .getElementById("platform")
+        .value;
+
+    const contentType =
+        document
+        .getElementById("contentType")
+        .value;
+
+    const count =
+        document
+        .getElementById("count")
+        .value;
+
+    const instructions =
+        document
+        .getElementById("instructions")
+        .value
+        .trim();
+
+
+    const button =
+        document
+        .getElementById("generateBtn");
+
+    const loading =
+        document
+        .getElementById("loading");
+
+    const errorBox =
+        document
+        .getElementById("error");
+
+    const result =
+        document
+        .getElementById("result");
+
+
+    errorBox.style.display="none";
+    result.style.display="none";
+
+
+    if(!topic){
+
+        errorBox.textContent =
+            "Please enter a content topic.";
+
+        errorBox.style.display="block";
+
+        return;
+    }
+
+
+    button.disabled=true;
+    loading.style.display="block";
+
+
+    const prompt = `
+
+You are NEXORA AI, a creative content strategist.
+
+Generate exactly ${count} unique content ideas.
+
+Topic:
+${topic}
+
+Platform:
+${platform}
+
+Content Type:
+${contentType}
+
+Extra Instructions:
+${instructions || "None"}
+
+Rules:
+
+1. Make every idea unique.
+2. Make ideas practical and easy to create.
+3. Make titles catchy.
+4. Give a short description for every idea.
+5. Match the selected platform.
+6. Avoid repetitive ideas.
+
+Return exactly in this format:
+
+IDEA 1
+TITLE: Catchy title
+DESCRIPTION: Short description
+
+IDEA 2
+TITLE: Catchy title
+DESCRIPTION: Short description
+
+Continue until ${count} ideas are complete.
+
+`;
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/ai-test",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            prompt:prompt
+                        })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "AI request failed."
+            );
+        }
+
+
+        if(!data.success){
+
+            throw new Error(
+                data.message ||
+                "AI could not generate ideas."
+            );
+        }
+
+
+        renderIdeas(
+            data.response || ""
+        );
+
+
+        document
+        .getElementById("ideaBadge")
+        .textContent =
+            `${count} Ideas`;
+
+
+        result.style.display="block";
+
+    }
+
+    catch(error){
+
+        errorBox.textContent =
+            error.message ||
+            "Something went wrong.";
+
+        errorBox.style.display="block";
+
+    }
+
+    finally{
+
+        button.disabled=false;
+
+        loading.style.display="none";
+
+    }
+
+}
+
+
+function renderIdeas(text){
+
+    const box =
+        document.getElementById("ideas");
+
+    box.innerHTML="";
+
+
+    const blocks =
+        text
+        .split(
+            /(?=IDEA\s+\d+)/i
+        )
+        .filter(
+            block =>
+                block.trim()
+        );
+
+
+    if(!blocks.length){
+
+        const idea =
+            document.createElement("div");
+
+        idea.className="idea";
+
+        idea.textContent=text;
+
+        box.appendChild(idea);
+
+        return;
+    }
+
+
+    blocks.forEach(
+        (block,index)=>{
+
+            const lines =
+                block
+                .trim()
+                .split("\n")
+                .map(
+                    line =>
+                        line.trim()
+                )
+                .filter(
+                    line =>
+                        line
+                );
+
+
+            const card =
+                document.createElement("div");
+
+            card.className="idea";
+
+
+            const number =
+                document.createElement("div");
+
+            number.className="idea-number";
+
+            number.textContent =
+                `IDEA ${index+1}`;
+
+            card.appendChild(number);
+
+
+            const title =
+                document.createElement("div");
+
+            title.className="idea-title";
+
+            const titleLine =
+                lines.find(
+                    line =>
+                        /^TITLE:/i.test(line)
+                );
+
+
+            title.textContent =
+                titleLine
+                ? titleLine.replace(
+                    /^TITLE:\s*/i,
+                    ""
+                )
+                : lines[1] || lines[0];
+
+
+            card.appendChild(title);
+
+
+            const description =
+                document.createElement("div");
+
+            description.className="idea-text";
+
+
+            const descLine =
+                lines.find(
+                    line =>
+                        /^DESCRIPTION:/i.test(line)
+                );
+
+
+            description.textContent =
+                descLine
+                ? descLine.replace(
+                    /^DESCRIPTION:\s*/i,
+                    ""
+                )
+                : lines.slice(2).join(" ");
+
+
+            card.appendChild(description);
+
+
+            box.appendChild(card);
+
+        }
+    );
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>AI Script Generator | NEXORA</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+        NEXORA
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/creator-tools">
+            Creator Tools
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<main class="creator-tool-page">
+
+
+    <div class="creator-tool-header">
+
+        <p class="welcome-text">
+            NEXORA AI CREATOR LAB
+        </p>
+
+        <h1>
+            AI Script Generator 🎬
+        </h1>
+
+        <p>
+            Create complete video scripts with AI.
+        </p>
+
+    </div>
+
+
+
+    <div class="generator-layout">
+
+
+        <!-- INPUT -->
+
+        <div class="generator-card">
+
+
+            <div class="input-group">
+
+                <label>
+                    Platform
+                </label>
+
+                <select id="platform">
+
+                    <option value="YouTube">
+                        YouTube
+                    </option>
+
+                    <option value="Instagram Reels">
+                        Instagram Reels
+                    </option>
+
+                    <option value="YouTube Shorts">
+                        YouTube Shorts
+                    </option>
+
+                    <option value="Facebook">
+                        Facebook
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Video Topic
+                </label>
+
+                <textarea
+                    id="topic"
+                    rows="5"
+                    maxlength="1000"
+                    placeholder="Example: My first gaming PC..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Video Duration
+                </label>
+
+                <select id="duration">
+
+                    <option value="30 seconds">
+                        30 Seconds
+                    </option>
+
+                    <option value="60 seconds">
+                        60 Seconds
+                    </option>
+
+                    <option value="2 minutes">
+                        2 Minutes
+                    </option>
+
+                    <option value="5 minutes">
+                        5 Minutes
+                    </option>
+
+                    <option value="10 minutes">
+                        10 Minutes
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Script Style
+                </label>
+
+                <select id="style">
+
+                    <option value="Engaging">
+                        🔥 Engaging
+                    </option>
+
+                    <option value="Funny">
+                        😂 Funny
+                    </option>
+
+                    <option value="Professional">
+                        💼 Professional
+                    </option>
+
+                    <option value="Storytelling">
+                        📖 Storytelling
+                    </option>
+
+                    <option value="Educational">
+                        🎓 Educational
+                    </option>
+
+                    <option value="Motivational">
+                        🚀 Motivational
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Target Audience
+                </label>
+
+                <input
+                    id="audience"
+                    type="text"
+                    maxlength="100"
+                    placeholder="Example: Gamers"
+                >
+
+            </div>
+
+
+            <button
+                id="generateBtn"
+                class="calculate-btn"
+                onclick="generateScript()"
+            >
+                ✨ Generate AI Script
+            </button>
+
+
+        </div>
+
+
+
+        <!-- RESULT -->
+
+        <div class="generator-result">
+
+
+            <div class="result-header">
+
+                <span>
+                    AI GENERATED SCRIPT
+                </span>
+
+                <button
+                    class="copy-btn"
+                    onclick="copyScript()"
+                >
+                    📋 Copy
+                </button>
+
+            </div>
+
+
+            <div
+                id="scriptOutput"
+                class="caption-output"
+            >
+
+                <div class="empty-script">
+
+                    🎬
+
+                    <h3>
+                        Your AI script will appear here
+                    </h3>
+
+                    <p>
+                        Enter your topic and generate a script.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="regenerateBtn"
+                class="regenerate-btn"
+                onclick="generateScript()"
+            >
+                🔄 Generate Another
+            </button>
+
+
+            <p
+                id="copyMessage"
+                class="copy-message"
+            ></p>
+
+
+        </div>
+
+
+    </div>
+
+
+    <a
+        href="/creator-tools"
+        class="back-dashboard"
+    >
+        ← Back to Creator Tools
+    </a>
+
+
+</main>
+
+
+
+<script>
+
+async function generateScript() {
+
+
+    const platform =
+        document
+        .getElementById("platform")
+        .value;
+
+
+    const topic =
+        document
+        .getElementById("topic")
+        .value
+        .trim();
+
+
+    const duration =
+        document
+        .getElementById("duration")
+        .value;
+
+
+    const style =
+        document
+        .getElementById("style")
+        .value;
+
+
+    const audience =
+        document
+        .getElementById("audience")
+        .value
+        .trim();
+
+
+    const output =
+        document
+        .getElementById("scriptOutput");
+
+
+    const generateBtn =
+        document
+        .getElementById("generateBtn");
+
+
+    const regenerateBtn =
+        document
+        .getElementById("regenerateBtn");
+
+
+    const copyMessage =
+        document
+        .getElementById("copyMessage");
+
+
+    if (!topic) {
+
+        alert(
+            "Please enter a video topic."
+        );
+
+        return;
+
+    }
+
+
+    generateBtn.disabled = true;
+
+    regenerateBtn.disabled = true;
+
+
+    generateBtn.textContent =
+        "🤖 Generating...";
+
+
+    output.innerHTML = `
+
+        <div class="empty-script">
+
+            🤖
+
+            <h3>
+                AI is writing your script...
+            </h3>
+
+            <p>
+                Please wait.
+            </p>
+
+        </div>
+
+    `;
+
+
+    copyMessage.textContent = "";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/generate-script",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            platform:
+                                platform,
+
+                            topic:
+                                topic,
+
+                            duration:
+                                duration,
+
+                            style:
+                                style,
+
+                            audience:
+                                audience ||
+                                "General audience"
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Script generation failed."
+            );
+
+        }
+
+
+        output.textContent =
+            data.script;
+
+
+    } catch (error) {
+
+        output.innerHTML = `
+
+            <div class="empty-script">
+
+                ❌
+
+                <h3>
+                    Something went wrong
+                </h3>
+
+                <p>
+                    ${error.message}
+                </p>
+
+            </div>
+
+        `;
+
+    } finally {
+
+        generateBtn.disabled = false;
+
+        regenerateBtn.disabled = false;
+
+        generateBtn.textContent =
+            "✨ Generate AI Script";
+
+    }
+
+}
+
+
+async function copyScript() {
+
+
+    const output =
+        document
+        .getElementById("scriptOutput");
+
+
+    const text =
+        output.textContent.trim();
+
+
+    if (!text) {
+        return;
+    }
+
+
+    try {
+
+        await navigator
+            .clipboard
+            .writeText(text);
+
+
+        document
+        .getElementById(
+            "copyMessage"
+        )
+        .textContent =
+            "✓ Script copied!";
+
+
+    } catch (error) {
+
+        document
+        .getElementById(
+            "copyMessage"
+        )
+        .textContent =
+            "❌ Unable to copy.";
+
+    }
+
+}
+
+</script>
+
+
+</body>
+
+</html>

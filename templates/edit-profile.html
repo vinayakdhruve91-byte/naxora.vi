@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXORA | Edit Profile</title>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            color: white;
+            background:
+                radial-gradient(circle at 8% 8%, rgba(0,190,255,.15), transparent 28%),
+                radial-gradient(circle at 92% 28%, rgba(160,70,255,.15), transparent 30%),
+                #03050d;
+        }
+
+        .navbar {
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 max(20px, calc((100% - 850px) / 2));
+            background: rgba(3,5,13,.82);
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            backdrop-filter: blur(20px);
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 950;
+            letter-spacing: 3px;
+            background: linear-gradient(90deg,#4edcff,#9270ff,#ed6bff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .back {
+            color: rgba(255,255,255,.65);
+            text-decoration: none;
+            padding: 9px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,.08);
+            background: rgba(255,255,255,.04);
+        }
+
+        .wrap {
+            width: min(650px, 92%);
+            margin: 55px auto;
+        }
+
+        .card {
+            padding: 32px;
+            border-radius: 26px;
+            background: linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
+            border: 1px solid rgba(255,255,255,.11);
+            box-shadow: 0 25px 65px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.07);
+            backdrop-filter: blur(18px);
+        }
+
+        .icon {
+            width: 62px;
+            height: 62px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            font-size: 28px;
+            margin-bottom: 18px;
+            background: linear-gradient(135deg,rgba(20,200,255,.16),rgba(140,80,255,.20));
+            border: 1px solid rgba(140,150,255,.18);
+        }
+
+        h1 {
+            font-size: 32px;
+            background: linear-gradient(90deg,#fff,#7ce5ff,#d38cff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .sub {
+            margin-top: 8px;
+            margin-bottom: 28px;
+            color: rgba(255,255,255,.45);
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 8px;
+            color: rgba(255,255,255,.68);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 15px;
+            border-radius: 12px;
+            outline: none;
+            color: white;
+            background: rgba(255,255,255,.045);
+            border: 1px solid rgba(255,255,255,.10);
+            transition: .2s;
+        }
+
+        input:focus {
+            border-color: rgba(90,200,255,.45);
+            box-shadow: 0 0 0 3px rgba(70,160,255,.08);
+        }
+
+        .error {
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            border-radius: 11px;
+            color: #ffb0bc;
+            background: rgba(255,60,90,.07);
+            border: 1px solid rgba(255,80,110,.18);
+            font-size: 13px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 11px;
+            margin-top: 25px;
+        }
+
+        button, .cancel {
+            flex: 1;
+            padding: 13px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 14px;
+            transition: .2s;
+        }
+
+        button {
+            color: white;
+            border: 1px solid rgba(110,180,255,.22);
+            background: linear-gradient(135deg,rgba(20,190,255,.18),rgba(120,70,255,.22));
+        }
+
+        .cancel {
+            color: rgba(255,255,255,.65);
+            border: 1px solid rgba(255,255,255,.09);
+            background: rgba(255,255,255,.04);
+        }
+
+        button:hover, .cancel:hover {
+            transform: translateY(-2px);
+        }
+
+        @media(max-width:500px) {
+            .card { padding: 24px; }
+            .actions { flex-direction: column; }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">NEXORA</div>
+    <a href="/profile" class="back">← Profile</a>
+</nav>
+
+<main class="wrap">
+
+    <section class="card">
+
+        <div class="icon">✏️</div>
+
+        <h1>Edit Profile</h1>
+        <p class="sub">Update your NEXORA account information.</p>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+
+            <label for="name">Name</label>
+            <input
+                id="name"
+                name="name"
+                type="text"
+                value="{{ name }}"
+                maxlength="100"
+                required
+            >
+
+            <label for="email">Email</label>
+            <input
+                id="email"
+                name="email"
+                type="email"
+                value="{{ email }}"
+                maxlength="120"
+                required
+            >
+
+            <div class="actions">
+                <a href="/profile" class="cancel">Cancel</a>
+                <button type="submit">💾 Save Changes</button>
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+</body>
+</html>

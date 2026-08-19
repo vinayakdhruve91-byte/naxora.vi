@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Login | NEXORA</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            color: white;
+
+            background:
+                radial-gradient(
+                    circle at 15% 20%,
+                    rgba(0, 140, 255, 0.22),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 85% 80%,
+                    rgba(255, 0, 190, 0.20),
+                    transparent 35%
+                ),
+                #050617;
+
+            overflow: hidden;
+        }
+
+
+        /* =========================================
+           BACKGROUND GLOW
+        ========================================= */
+
+        .background-glow {
+            position: fixed;
+
+            width: 500px;
+            height: 500px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(70, 90, 255, 0.16),
+                    transparent 70%
+                );
+
+            filter: blur(35px);
+
+            pointer-events: none;
+        }
+
+
+        .glow-one {
+            top: -200px;
+            left: -150px;
+        }
+
+
+        .glow-two {
+            right: -200px;
+            bottom: -200px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(255, 40, 190, 0.14),
+                    transparent 70%
+                );
+        }
+
+
+        /* =========================================
+           LOGIN CONTAINER
+        ========================================= */
+
+        .login-container {
+            position: relative;
+
+            width: min(
+                1100px,
+                calc(100% - 30px)
+            );
+
+            min-height: 650px;
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            border-radius: 28px;
+
+            overflow: hidden;
+
+            background:
+                rgba(7, 9, 35, 0.78);
+
+            border:
+                1px solid
+                rgba(110, 170, 255, 0.35);
+
+            box-shadow:
+
+                0 35px 90px
+                rgba(0,0,0,0.55),
+
+                0 0 45px
+                rgba(40,100,255,0.12),
+
+                inset 0 1px 0
+                rgba(255,255,255,0.10);
+
+            backdrop-filter:
+                blur(22px);
+        }
+
+
+        /* =========================================
+           LEFT SIDE
+        ========================================= */
+
+        .login-panel {
+            position: relative;
+
+            padding: 55px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(5,8,30,0.96),
+                    rgba(12,15,48,0.82)
+                );
+        }
+
+
+        /* =========================================
+           BACK BUTTON
+        ========================================= */
+
+        .back-button {
+            position: absolute;
+
+            top: 25px;
+            left: 25px;
+
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 24px;
+
+            background:
+                rgba(255,255,255,0.05);
+
+            border:
+                1px solid
+                rgba(120,160,255,0.25);
+
+            transition:
+                0.25s ease;
+        }
+
+
+        .back-button:hover {
+            transform:
+                translateX(-3px);
+
+            box-shadow:
+                0 0 20px
+                rgba(60,150,255,0.35);
+        }
+
+
+        /* =========================================
+           TEXT
+        ========================================= */
+
+        .welcome {
+            font-size: 17px;
+
+            font-weight: 600;
+
+            margin-bottom: 10px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #43a8ff,
+                    #b85cff,
+                    #ff49c8
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+
+        h1 {
+            margin: 0 0 12px;
+
+            font-size: 42px;
+
+            line-height: 1.1;
+        }
+
+
+        .nexora-text {
+            background:
+                linear-gradient(
+                    90deg,
+                    #1fa5ff,
+                    #8d55ff,
+                    #ff42c7
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+
+        .description {
+            margin-bottom: 32px;
+
+            color:
+                rgba(255,255,255,0.62);
+
+            line-height: 1.5;
+        }
+
+
+        .description a,
+        .register a {
+            color: #55a9ff;
+
+            text-decoration: none;
+
+            font-weight: 600;
+        }
+
+
+        .description a:hover,
+        .register a:hover {
+            text-shadow:
+                0 0 12px
+                rgba(70,160,255,0.8);
+        }
+
+
+        /* =========================================
+           INPUTS
+        ========================================= */
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+
+        .input-group label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-size: 13px;
+
+            color:
+                rgba(255,255,255,0.55);
+        }
+
+
+        .input-wrapper {
+            position: relative;
+        }
+
+
+        .input-icon {
+            position: absolute;
+
+            left: 16px;
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            font-size: 18px;
+
+            opacity: 0.75;
+        }
+
+
+        .input-wrapper input {
+            width: 100%;
+
+            height: 55px;
+
+            padding:
+                0 48px;
+
+            border-radius: 14px;
+
+            outline: none;
+
+            color: white;
+
+            font-size: 15px;
+
+            background:
+                rgba(10,15,45,0.75);
+
+            border:
+                1px solid
+                rgba(100,130,255,0.25);
+
+            box-shadow:
+                inset 0 1px 5px
+                rgba(0,0,0,0.25);
+
+            transition:
+                0.25s ease;
+        }
+
+
+        .input-wrapper input::placeholder {
+            color:
+                rgba(255,255,255,0.38);
+        }
+
+
+        .input-wrapper input:focus {
+            border-color:
+                #508cff;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(70,130,255,0.10),
+
+                0 0 20px
+                rgba(70,130,255,0.18);
+        }
+
+
+        /* =========================================
+           OPTIONS
+        ========================================= */
+
+        .options {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin:
+                5px 0 25px;
+
+            font-size: 13px;
+        }
+
+
+        .remember {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color:
+                rgba(255,255,255,0.55);
+        }
+
+
+        .remember input {
+            width: 15px;
+            height: 15px;
+        }
+
+
+        .forgot {
+            color: #5ba7ff;
+
+            text-decoration: none;
+        }
+
+
+        /* =========================================
+           LOGIN BUTTON
+        ========================================= */
+
+        .login-button {
+            width: 100%;
+
+            height: 56px;
+
+            border: none;
+
+            border-radius: 15px;
+
+            cursor: pointer;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #187cff,
+                    #7d35ff,
+                    #ff25b9
+                );
+
+            box-shadow:
+                0 12px 30px
+                rgba(90,70,255,0.30);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        .login-button:hover {
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                0 17px 40px
+                rgba(90,70,255,0.45),
+
+                0 0 25px
+                rgba(255,50,190,0.18);
+        }
+
+
+        .login-button:active {
+            transform:
+                translateY(0);
+        }
+
+
+        /* =========================================
+           REGISTER
+        ========================================= */
+
+        .register {
+            text-align: center;
+
+            margin-top: 25px;
+
+            font-size: 14px;
+
+            color:
+                rgba(255,255,255,0.55);
+        }
+
+
+        /* =========================================
+           RIGHT SIDE
+        ========================================= */
+
+        .visual-panel {
+            position: relative;
+
+            overflow: hidden;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background:
+                radial-gradient(
+                    circle at 50% 40%,
+                    rgba(50,40,160,0.45),
+                    transparent 55%
+                ),
+                #08082b;
+        }
+
+
+        /* =========================================
+           NEON WAVES
+        ========================================= */
+
+        .wave {
+            position: absolute;
+
+            width: 750px;
+            height: 170px;
+
+            border-radius: 50%;
+
+            border-top:
+                4px solid
+                rgba(40,140,255,0.9);
+
+            border-bottom:
+                4px solid
+                rgba(255,40,210,0.75);
+
+            filter:
+                blur(1px);
+
+            transform:
+                rotate(-12deg);
+
+            box-shadow:
+
+                0 0 15px
+                rgba(20,130,255,0.9),
+
+                0 0 35px
+                rgba(180,30,255,0.5);
+        }
+
+
+        .wave-one {
+            top: 30%;
+
+            left: -100px;
+
+            transform:
+                rotate(-12deg);
+        }
+
+
+        .wave-two {
+            top: 48%;
+
+            left: -80px;
+
+            transform:
+                rotate(8deg);
+
+            opacity: 0.85;
+        }
+
+
+        .wave-three {
+            top: 65%;
+
+            left: -130px;
+
+            transform:
+                rotate(-8deg);
+
+            opacity: 0.7;
+        }
+
+
+        /* =========================================
+           NEXORA LOGO
+        ========================================= */
+
+        .brand {
+            position: relative;
+
+            z-index: 5;
+
+            text-align: center;
+        }
+
+
+        .brand-logo {
+            width: 90px;
+            height: 90px;
+
+            margin: 0 auto 20px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 25px;
+
+            font-size: 58px;
+            font-weight: 900;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #36c8ff,
+                    #7045ff,
+                    #ff40c8
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+
+            text-shadow:
+                0 0 25px
+                rgba(80,130,255,0.6);
+
+            filter:
+                drop-shadow(
+                    0 0 20px
+                    rgba(70,100,255,0.5)
+                );
+        }
+
+
+        .brand h2 {
+            margin: 0;
+
+            letter-spacing: 9px;
+
+            font-size: 30px;
+        }
+
+
+        .brand p {
+            margin-top: 15px;
+
+            color:
+                rgba(255,255,255,0.65);
+
+            font-size: 15px;
+        }
+
+
+        /* =========================================
+           DEV CREDIT
+        ========================================= */
+
+        .dev-credit {
+            position: absolute;
+
+            right: 25px;
+            bottom: 18px;
+
+            z-index: 20;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            font-style: italic;
+
+            letter-spacing: 1px;
+
+            color: #d987ff;
+
+            text-shadow:
+                0 0 5px #a83cff,
+                0 0 10px #7d32ff,
+                0 0 20px #ff28c8;
+
+            animation:
+                devGlow
+                2s
+                ease-in-out
+                infinite
+                alternate;
+        }
+
+
+        @keyframes devGlow {
+
+            from {
+                opacity: 0.45;
+
+                text-shadow:
+                    0 0 4px #7d32ff;
+            }
+
+            to {
+                opacity: 1;
+
+                text-shadow:
+                    0 0 5px #a83cff,
+                    0 0 12px #7d32ff,
+                    0 0 22px #ff28c8;
+            }
+
+        }
+
+
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 800px) {
+
+            body {
+                padding: 15px;
+            }
+
+
+            .login-container {
+                grid-template-columns: 1fr;
+
+                min-height: auto;
+            }
+
+
+            .visual-panel {
+                min-height: 300px;
+
+                order: -1;
+            }
+
+
+            .login-panel {
+                padding:
+                    75px 25px 35px;
+            }
+
+
+            .brand h2 {
+                font-size: 24px;
+
+                letter-spacing: 6px;
+            }
+
+
+            .brand-logo {
+                width: 70px;
+                height: 70px;
+
+                font-size: 44px;
+            }
+
+
+            h1 {
+                font-size: 32px;
+            }
+
+
+            .wave {
+                width: 650px;
+            }
+
+        }
+
+
+        @media (max-width: 450px) {
+
+            .login-container {
+                width: 100%;
+
+                border-radius: 20px;
+            }
+
+
+            .login-panel {
+                padding:
+                    70px 20px 30px;
+            }
+
+
+            .visual-panel {
+                min-height: 250px;
+            }
+
+
+            .options {
+                font-size: 12px;
+            }
+
+        }
+
+
+        .background-glow{animation:glowMove 8s ease-in-out infinite alternate}.glow-two{animation-delay:2s}@keyframes glowMove{from{transform:translate(0,0) scale(1)}to{transform:translate(70px,-50px) scale(1.15)}}
+        .login-container{animation:loginContainerIn .9s ease-out both}@keyframes loginContainerIn{from{opacity:0;transform:translateY(30px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+        .nexora-text{animation:nexoraGlow 2.5s ease-in-out infinite alternate}@keyframes nexoraGlow{from{filter:drop-shadow(0 0 2px rgba(120,80,255,.2))}to{filter:drop-shadow(0 0 14px rgba(190,70,255,.7))}}
+        .login-button{position:relative;overflow:hidden;animation:loginButtonPulse 2.5s ease-in-out infinite alternate}.login-button::after{content:"";position:absolute;top:0;left:-120%;width:65%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.38),transparent);transform:skewX(-20deg);animation:buttonShine 3.5s infinite}@keyframes loginButtonPulse{from{box-shadow:0 12px 30px rgba(90,70,255,.30)}to{box-shadow:0 12px 35px rgba(90,70,255,.55),0 0 25px rgba(255,50,190,.25)}}@keyframes buttonShine{0%{left:-120%}45%,100%{left:140%}}
+        .visual-panel{animation:visualIn 1s .15s ease-out both}@keyframes visualIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+        .wave-one{animation:waveMove1 6s ease-in-out infinite alternate}.wave-two{animation:waveMove2 7s ease-in-out infinite alternate}.wave-three{animation:waveMove3 8s ease-in-out infinite alternate}@keyframes waveMove1{from{transform:translateX(-30px) rotate(-12deg)}to{transform:translateX(55px) rotate(-8deg)}}@keyframes waveMove2{from{transform:translateX(40px) rotate(8deg)}to{transform:translateX(-45px) rotate(13deg)}}@keyframes waveMove3{from{transform:translateX(-40px) rotate(-8deg)}to{transform:translateX(45px) rotate(-13deg)}}
+        .brand-logo{animation:brandFloat 3s ease-in-out infinite}@keyframes brandFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-9px) scale(1.04)}}.brand h2{animation:brandGlow 3s ease-in-out infinite alternate}@keyframes brandGlow{from{text-shadow:0 0 2px rgba(100,100,255,.15)}to{text-shadow:0 0 18px rgba(130,80,255,.65)}}
+        .dev-credit{animation:devPulse 2s ease-in-out infinite alternate}@keyframes devPulse{from{opacity:.45}to{opacity:1}}
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+
+        /* =========================================
+           LOGIN INTERACTION
+        ========================================= */
+
+        .login-status {
+            min-height: 0;
+            margin: -14px 0 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            line-height: 1.4;
+            transition: .25s ease;
+        }
+
+        .login-button {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .login-button:disabled {
+            cursor: wait;
+            opacity: .82;
+            transform: none !important;
+        }
+
+        .spinner {
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,.35);
+            border-top-color: white;
+            animation: loginSpinner .7s linear infinite;
+        }
+
+        @keyframes loginSpinner {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .login-button.is-loading {
+            animation: none;
+            box-shadow:
+                0 0 24px rgba(100,80,255,.45);
+        }
+
+        .input-wrapper input.input-error {
+            border-color: #ff4f88 !important;
+            box-shadow:
+                0 0 0 3px rgba(255,70,120,.10),
+                0 0 20px rgba(255,50,120,.18) !important;
+            animation: inputShake .35s ease;
+        }
+
+        @keyframes inputShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @media (max-width: 450px) {
+            .login-status {
+                font-size: 12px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="background-glow glow-one"></div>
+
+<div class="background-glow glow-two"></div>
+
+
+
+<div class="login-container">
+
+
+    <!-- =========================================
+         LOGIN PANEL
+    ========================================== -->
+
+    <section class="login-panel">
+
+
+        <a
+            href="/"
+            class="back-button"
+        >
+            ←
+        </a>
+
+
+        <div class="welcome">
+            Welcome Back!
+        </div>
+
+
+        <h1>
+            Login to
+            <span class="nexora-text">
+                NEXORA
+            </span>
+        </h1>
+
+
+        <div class="description">
+
+            Please enter your login information
+            <br>
+
+            or
+
+            <a href="/signup">
+                click here
+            </a>
+
+            to registration
+
+        </div>
+
+
+
+        <!-- LOGIN STATUS -->
+
+        <div id="login-status" class="login-status" aria-live="polite"></div>
+
+        <!-- LOGIN FORM -->
+
+        <form
+            method="POST"
+            action="/login"
+        >
+
+
+            <!-- EMAIL -->
+
+            <div class="input-group">
+
+                <label>
+                    Email
+                </label>
+
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        ✉
+                    </span>
+
+
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PASSWORD -->
+
+            <div class="input-group">
+
+                <label>
+                    Password
+                </label>
+
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        🔒
+                    </span>
+
+
+                    <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <!-- OPTIONS -->
+
+            <div class="options">
+
+                <label class="remember">
+
+                    <input
+                        type="checkbox"
+                        name="remember"
+                    >
+
+                    Remember me
+
+                </label>
+
+
+                <a
+                    href="#"
+                    class="forgot"
+                    onclick="return false;"
+                >
+                    Forgot password?
+                </a>
+
+            </div>
+
+
+
+            <!-- BUTTON -->
+
+            <button
+                type="submit"
+                class="login-button"
+            >
+
+                → &nbsp; Log In
+
+            </button>
+
+
+        </form>
+
+
+
+        <div class="register">
+
+            Don't have an account?
+
+            <a href="/signup">
+                Click here
+            </a>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =========================================
+         RIGHT VISUAL
+    ========================================== -->
+
+    <section class="visual-panel">
+
+
+        <div class="wave wave-one"></div>
+
+        <div class="wave wave-two"></div>
+
+        <div class="wave wave-three"></div>
+
+
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                N
+            </div>
+
+
+            <h2>
+                NEXORA
+            </h2>
+
+
+            <p>
+                Study
+                <strong style="color:#31c4ff;">
+                    Smarter.
+                </strong>
+
+                Achieve
+                <strong style="color:#ff42c8;">
+                    Better.
+                </strong>
+            </p>
+
+        </div>
+
+
+
+        <!-- SMALL DEV CREDIT -->
+
+        <div class="dev-credit">
+            dev-vinayak
+        </div>
+
+
+    </section>
+
+
+</div>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector('form[action="/login"]');
+    const button = document.querySelector(".login-button");
+    const status = document.getElementById("login-status");
+
+    if (!form || !button) return;
+
+    form.addEventListener("submit", function () {
+        if (button.disabled) return;
+
+        button.disabled = true;
+        button.classList.add("is-loading");
+        button.dataset.originalText = button.innerHTML;
+        button.innerHTML = '<span class="spinner"></span> Signing in...';
+
+        if (status) {
+            status.className = "login-status";
+            status.textContent = "";
+        }
+    });
+});
+</script>
+
+</body>
+
+</html>

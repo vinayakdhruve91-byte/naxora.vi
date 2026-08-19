@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXORA | Profile</title>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            color: white;
+            background:
+                radial-gradient(circle at 8% 8%, rgba(0,190,255,.15), transparent 28%),
+                radial-gradient(circle at 92% 28%, rgba(160,70,255,.15), transparent 30%),
+                radial-gradient(circle at 50% 100%, rgba(255,50,170,.08), transparent 35%),
+                #03050d;
+            overflow-x: hidden;
+        }
+
+        body::before, body::after {
+            content: "";
+            position: fixed;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            filter: blur(45px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        body::before {
+            left: -220px;
+            top: 160px;
+            background: rgba(0,210,255,.08);
+        }
+
+        body::after {
+            right: -220px;
+            bottom: -160px;
+            background: rgba(170,70,255,.10);
+        }
+
+        .navbar {
+            height: 72px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 max(20px, calc((100% - 1100px) / 2));
+            background: rgba(3,5,13,.80);
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            backdrop-filter: blur(20px);
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 950;
+            letter-spacing: 3px;
+            background: linear-gradient(90deg,#4edcff,#9270ff,#ed6bff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .back {
+            color: rgba(255,255,255,.65);
+            text-decoration: none;
+            padding: 9px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,.08);
+            background: rgba(255,255,255,.04);
+            transition: .25s;
+        }
+
+        .back:hover {
+            color: white;
+            transform: translateY(-2px);
+            border-color: rgba(140,130,255,.35);
+        }
+
+        .page {
+            width: min(1050px, 92%);
+            margin: auto;
+            padding: 42px 0 80px;
+        }
+
+        .hero {
+            position: relative;
+            padding: 32px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            border-radius: 26px;
+            background: linear-gradient(135deg,rgba(0,190,255,.13),rgba(110,60,255,.12),rgba(255,60,170,.07));
+            border: 1px solid rgba(255,255,255,.12);
+            box-shadow: 0 25px 65px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.09);
+            backdrop-filter: blur(18px);
+            animation: enter .7s ease-out both;
+        }
+
+        @keyframes enter {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .avatar {
+            width: 92px;
+            height: 92px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 28px;
+            font-size: 36px;
+            font-weight: 900;
+            background: linear-gradient(135deg,#19cfff,#765cff,#dc5cff);
+            box-shadow: 0 15px 40px rgba(90,100,255,.30), 0 0 35px rgba(170,70,255,.14);
+        }
+
+        .hero h1 {
+            font-size: clamp(28px,5vw,42px);
+            background: linear-gradient(90deg,#fff,#7ce5ff,#d38cff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            margin-top: 8px;
+            color: rgba(255,255,255,.52);
+        }
+
+        .section {
+            margin-top: 28px;
+            animation: enter .7s .12s ease-out both;
+        }
+
+        .section h2 {
+            font-size: 21px;
+            margin-bottom: 14px;
+        }
+
+        .info-card, .stat {
+            border-radius: 20px;
+            background: linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+            border: 1px solid rgba(255,255,255,.10);
+            box-shadow: 0 15px 35px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.06);
+            backdrop-filter: blur(15px);
+        }
+
+        .info-card {
+            padding: 22px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,.07);
+        }
+
+        .row:last-child { border-bottom: 0; }
+
+        .label { color: rgba(255,255,255,.42); font-size: 13px; }
+        .value { color: rgba(255,255,255,.88); font-size: 14px; font-weight: 700; }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 15px;
+        }
+
+        .stat {
+            padding: 20px;
+            transition: .25s;
+        }
+
+        .stat:hover {
+            transform: translateY(-5px);
+            border-color: rgba(150,130,255,.25);
+        }
+
+        .icon { font-size: 25px; margin-bottom: 12px; }
+        .number { font-size: 27px; font-weight: 900; }
+        .stat-label { margin-top: 5px; color: rgba(255,255,255,.43); font-size: 12px; }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 19px;
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,.10);
+            background: rgba(255,255,255,.05);
+            transition: .25s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            border-color: rgba(150,130,255,.35);
+            box-shadow: 0 12px 28px rgba(70,80,255,.12);
+        }
+
+        .primary {
+            background: linear-gradient(135deg,rgba(40,180,255,.18),rgba(120,70,255,.20));
+        }
+
+        .logout {
+            color: #ff9cac;
+            border-color: rgba(255,80,110,.18);
+            background: rgba(255,60,90,.06);
+        }
+
+        .dev-credit {
+            position: fixed;
+            right: 18px;
+            bottom: 10px;
+            font-size: 10px;
+            font-weight: 800;
+            font-style: italic;
+            letter-spacing: 1px;
+            color: #dc8cff;
+            text-shadow: 0 0 5px #a52fff,0 0 12px #ff32d0;
+        }
+
+
+        .achievement-preview {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .achievement-preview p {
+            margin-top: 6px;
+            color: rgba(255,255,255,.42);
+            font-size: 13px;
+        }
+
+        .activity-list {
+            padding: 8px 22px;
+        }
+
+        .activity-row {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,.07);
+        }
+
+        .activity-row:last-child {
+            border-bottom: 0;
+        }
+
+        .activity-dot {
+            width: 9px;
+            height: 9px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #6f8cff;
+            box-shadow: 0 0 14px rgba(100,130,255,.65);
+        }
+
+        .activity-row strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .activity-row small {
+            display: block;
+            margin-top: 4px;
+            color: rgba(255,255,255,.35);
+            font-size: 11px;
+        }
+
+        .empty-activity {
+            padding: 18px 0;
+            color: rgba(255,255,255,.4);
+            font-size: 13px;
+        }
+
+        @media(max-width:800px) {
+            .stats { grid-template-columns: repeat(2,1fr); }
+        }
+
+        @media(max-width:600px) {
+            .hero { align-items: flex-start; flex-direction: column; }
+            .stats { grid-template-columns: 1fr 1fr; }
+            .row { flex-direction: column; gap: 6px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">NEXORA</div>
+    <a href="/dashboard" class="back">← Dashboard</a>
+</nav>
+
+<main class="page">
+
+    <section class="hero">
+        <div class="avatar">{{ name[:1]|upper }}</div>
+
+        <div>
+            <h1>{{ name }}</h1>
+            <p>Your personal NEXORA profile and progress.</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>👤 Account Information</h2>
+
+        <div class="info-card">
+            <div class="row">
+                <span class="label">Name</span>
+                <span class="value">{{ name }}</span>
+            </div>
+
+            <div class="row">
+                <span class="label">Email</span>
+                <span class="value">{{ email }}</span>
+            </div>
+
+            <div class="row">
+                <span class="label">Account</span>
+                <span class="value">NEXORA Member</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>📊 Your Progress</h2>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="icon">🔥</div>
+                <div class="number">{{ study_streak }}</div>
+                <div class="stat-label">Day Study Streak</div>
+            </div>
+
+            <div class="stat">
+                <div class="icon">⏱️</div>
+                <div class="number">{{ (study_minutes // 60) }}h</div>
+                <div class="stat-label">Study Time</div>
+            </div>
+
+            <div class="stat">
+                <div class="icon">📝</div>
+                <div class="number">{{ mcqs_practiced }}</div>
+                <div class="stat-label">MCQs Practiced</div>
+            </div>
+
+            <div class="stat">
+                <div class="icon">🎯</div>
+                <div class="number">{{ weekly_progress }}%</div>
+                <div class="stat-label">Weekly Progress</div>
+            </div>
+        </div>
+    </section>
+
+    
+    <section class="section">
+        <h2>🏆 Achievements</h2>
+
+        <div class="info-card achievement-preview">
+            <div>
+                <strong>Build your NEXORA journey</strong>
+                <p>Unlock badges as you study and use your tools.</p>
+            </div>
+            <a href="/achievements" class="btn primary">View Achievements →</a>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>🕒 Recent Activity</h2>
+
+        <div class="info-card activity-list">
+            {% if activities %}
+                {% for activity in activities %}
+                    <div class="activity-row">
+                        <span class="activity-dot"></span>
+                        <div>
+                            <strong>{{ activity.action }}</strong>
+                            <small>{{ activity.created_at.strftime('%d %b %Y, %I:%M %p') if activity.created_at else 'Recently' }}</small>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-activity">
+                    No activity yet. Start exploring NEXORA 🚀
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+<section class="section">
+        <h2>⚙️ Account Actions</h2>
+
+        <div class="actions">
+            <a href="/profile/edit" class="btn primary">✏️ Edit Profile</a>
+            <a href="/profile/password" class="btn">🔐 Change Password</a>
+            <a href="/logout" class="btn logout">🚪 Logout</a>
+        </div>
+    </section>
+
+</main>
+
+<div class="dev-credit">dev-vinayak</div>
+
+</body>
+</html>

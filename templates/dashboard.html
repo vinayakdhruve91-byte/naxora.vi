@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>NEXORA Dashboard</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            color: white;
+
+            background:
+                radial-gradient(
+                    circle at 8% 8%,
+                    rgba(0,190,255,.16),
+                    transparent 28%
+                ),
+
+                radial-gradient(
+                    circle at 92% 28%,
+                    rgba(160,70,255,.15),
+                    transparent 30%
+                ),
+
+                radial-gradient(
+                    circle at 50% 100%,
+                    rgba(255,50,170,.08),
+                    transparent 35%
+                ),
+
+                #03050d;
+
+            overflow-x: hidden;
+        }
+
+
+        body::before {
+
+            content: "";
+
+            position: fixed;
+
+            width: 500px;
+            height: 500px;
+
+            left: -220px;
+            top: 150px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(0,210,255,.09),
+                    transparent 70%
+                );
+
+            filter: blur(30px);
+
+            pointer-events: none;
+
+            z-index: -1;
+        }
+
+
+        body::after {
+
+            content: "";
+
+            position: fixed;
+
+            width: 500px;
+            height: 500px;
+
+            right: -220px;
+            bottom: -180px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(170,70,255,.10),
+                    transparent 70%
+                );
+
+            filter: blur(30px);
+
+            pointer-events: none;
+
+            z-index: -1;
+        }
+
+
+        /* =====================================
+           NAVBAR
+        ====================================== */
+
+        .navbar {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 100;
+
+            height: 72px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            padding:
+                0 max(25px, calc((100% - 1250px) / 2));
+
+            background:
+                rgba(3,5,13,.78);
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,.08);
+
+            backdrop-filter:
+                blur(20px);
+        }
+
+
+        .logo {
+
+            font-size: 25px;
+
+            font-weight: 950;
+
+            letter-spacing: 3px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #4edcff,
+                    #9270ff,
+                    #ed6bff
+                );
+
+            -webkit-background-clip: text;
+
+            background-clip: text;
+
+            color: transparent;
+        }
+
+
+        .nav-links {
+
+            display: flex;
+
+            gap: 8px;
+        }
+
+
+        .nav-links a {
+
+            padding:
+                10px 15px;
+
+            border-radius: 10px;
+
+            color:
+                rgba(255,255,255,.62);
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            transition: .2s;
+        }
+
+
+        .nav-links a:hover {
+
+            color: white;
+
+            background:
+                rgba(255,255,255,.06);
+        }
+
+        /* profile button */
+
+        .profile-link {
+            border: 1px solid rgba(120, 180, 255, .18);
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(80, 150, 255, .10),
+                    rgba(160, 80, 255, .10)
+                );
+            box-shadow:
+                0 8px 22px rgba(0,0,0,.12),
+                inset 0 1px 0 rgba(255,255,255,.06);
+        }
+
+        .profile-link:hover {
+            border-color: rgba(160, 130, 255, .38) !important;
+            transform: translateY(-2px);
+            box-shadow:
+                0 10px 28px rgba(80,90,255,.16),
+                0 0 18px rgba(150,90,255,.10);
+        }
+
+
+        /* =====================================
+           MAIN
+        ====================================== */
+
+        .dashboard {
+
+            width:
+                min(1250px,94%);
+
+            margin: auto;
+
+            padding:
+                32px 0 100px;
+        }
+
+
+        /* =====================================
+           HERO
+        ====================================== */
+
+        .hero {
+
+            position: relative;
+
+            padding:
+                35px;
+
+            margin-bottom: 25px;
+
+            overflow: hidden;
+
+            border-radius: 28px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(0,190,255,.14),
+                    rgba(110,60,255,.13),
+                    rgba(255,60,170,.08)
+                );
+
+            border:
+                1px solid
+                rgba(255,255,255,.13);
+
+            box-shadow:
+
+                0 25px 65px
+                rgba(0,0,0,.28),
+
+                inset 0 1px 0
+                rgba(255,255,255,.10);
+
+            backdrop-filter:
+                blur(18px);
+        }
+
+
+        .hero::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 240px;
+            height: 240px;
+
+            right: -100px;
+            top: -100px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(100,210,255,.22),
+                    transparent 70%
+                );
+        }
+
+
+        .welcome {
+
+            color:
+                #6dcfff;
+
+            font-size: 12px;
+
+            font-weight: 800;
+
+            letter-spacing: 3px;
+        }
+
+
+        .hero h1 {
+
+            margin-top: 10px;
+
+            font-size:
+                clamp(30px,5vw,46px);
+
+            line-height: 1.1;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    white,
+                    #7ce5ff,
+                    #d38cff
+                );
+
+            -webkit-background-clip: text;
+
+            background-clip: text;
+
+            color: transparent;
+        }
+
+
+        .hero p {
+
+            margin-top: 12px;
+
+            color:
+                rgba(255,255,255,.58);
+
+            font-size: 15px;
+        }
+
+
+        /* =====================================
+           STATS
+        ====================================== */
+
+        .stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4,1fr);
+
+            gap: 15px;
+
+            margin-bottom: 35px;
+        }
+
+
+        .stat {
+
+            position: relative;
+
+            padding: 20px;
+
+            min-height: 125px;
+
+            overflow: hidden;
+
+            border-radius: 19px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.075),
+                    rgba(255,255,255,.025)
+                );
+
+            border:
+                1px solid
+                rgba(255,255,255,.10);
+
+            box-shadow:
+
+                0 15px 35px
+                rgba(0,0,0,.20),
+
+                inset 0 1px 0
+                rgba(255,255,255,.07);
+
+            backdrop-filter:
+                blur(15px);
+
+            transition: .25s;
+        }
+
+
+        .stat:hover {
+
+            transform:
+                translateY(-5px);
+
+            border-color:
+                rgba(255,255,255,.20);
+        }
+
+
+        .stat-icon {
+
+            font-size: 25px;
+
+            margin-bottom: 12px;
+        }
+
+
+        .stat-number {
+
+            font-size: 27px;
+
+            font-weight: 900;
+        }
+
+
+        .stat-label {
+
+            margin-top: 5px;
+
+            color:
+                rgba(255,255,255,.48);
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================
+           SECTION
+        ====================================== */
+
+        .section {
+
+            margin-top: 35px;
+        }
+
+
+        .section-head {
+
+            display: flex;
+
+            align-items:
+                flex-end;
+
+            justify-content:
+                space-between;
+
+            gap: 15px;
+
+            margin-bottom: 16px;
+        }
+
+
+        .section-head h2 {
+
+            font-size: 22px;
+        }
+
+
+        .section-head p {
+
+            margin-top: 5px;
+
+            color:
+                rgba(255,255,255,.43);
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================
+           CARDS
+        ====================================== */
+
+        .grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3,1fr);
+
+            gap: 18px;
+        }
+
+
+        .card {
+
+            position: relative;
+
+            padding: 24px;
+
+            min-height: 190px;
+
+            overflow: hidden;
+
+            border-radius: 21px;
+
+            text-decoration: none;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.075),
+                    rgba(255,255,255,.025)
+                );
+
+            border:
+                1px solid
+                rgba(255,255,255,.11);
+
+            box-shadow:
+
+                0 15px 35px
+                rgba(0,0,0,.20),
+
+                inset 0 1px 0
+                rgba(255,255,255,.08);
+
+            backdrop-filter:
+                blur(15px);
+
+            transition:
+                transform .25s,
+                box-shadow .25s,
+                border-color .25s;
+        }
+
+
+        .card:hover {
+
+            transform:
+                translateY(-7px)
+                rotateX(1deg)
+                rotateY(-1deg);
+
+            box-shadow:
+                0 25px 55px
+                rgba(0,0,0,.30);
+
+            border-color:
+                rgba(255,255,255,.22);
+        }
+
+
+        .card::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 150px;
+            height: 150px;
+
+            right: -75px;
+            top: -75px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    var(--glow),
+                    transparent 70%
+                );
+
+            opacity: .17;
+        }
+
+
+        .blue {
+            --glow: #00c8ff;
+        }
+
+
+        .purple {
+            --glow: #a45cff;
+        }
+
+
+        .yellow {
+            --glow: #ffc52f;
+        }
+
+
+        .cyan {
+            --glow: #19e5ef;
+        }
+
+
+        .pink {
+            --glow: #ff55c8;
+        }
+
+
+        .green {
+            --glow: #65ed73;
+        }
+
+
+        .card-icon {
+
+            position: relative;
+
+            width: 56px;
+            height: 56px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 17px;
+
+            border-radius: 16px;
+
+            font-size: 27px;
+
+            background:
+                rgba(255,255,255,.07);
+
+            border:
+                1px solid
+                rgba(255,255,255,.13);
+
+            box-shadow:
+                0 10px 22px
+                rgba(0,0,0,.20);
+        }
+
+
+        .card h3 {
+
+            position: relative;
+
+            font-size: 18px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .card p {
+
+            position: relative;
+
+            color:
+                rgba(255,255,255,.53);
+
+            font-size: 13px;
+
+            line-height: 1.55;
+        }
+
+
+        .open {
+
+            position: absolute;
+
+            right: 20px;
+            bottom: 19px;
+
+            color:
+                rgba(255,255,255,.42);
+
+            font-size: 18px;
+        }
+
+
+        /* =====================================
+           TODAY GOAL + EXAM
+        ====================================== */
+
+        .two-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1.3fr .7fr;
+
+            gap: 18px;
+        }
+
+
+        .goal-card,
+        .exam-card {
+
+            padding: 25px;
+
+            border-radius: 21px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.075),
+                    rgba(255,255,255,.025)
+                );
+
+            border:
+                1px solid
+                rgba(255,255,255,.10);
+
+            box-shadow:
+                0 15px 35px
+                rgba(0,0,0,.20),
+
+                inset 0 1px 0
+                rgba(255,255,255,.07);
+
+            backdrop-filter:
+                blur(15px);
+        }
+
+
+        .goal-top {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            gap: 15px;
+
+            margin-bottom: 17px;
+        }
+
+
+        .goal-title {
+
+            font-size: 17px;
+
+            font-weight: 800;
+        }
+
+
+        .goal-percent {
+
+            color:
+                #72d8ff;
+
+            font-weight: 900;
+        }
+
+
+        .progress {
+
+            width: 100%;
+
+            height: 10px;
+
+            overflow: hidden;
+
+            border-radius: 20px;
+
+            background:
+                rgba(255,255,255,.07);
+        }
+
+
+        .progress-fill {
+
+            width: 62%;
+
+            height: 100%;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #18cfff,
+                    #735cff,
+                    #d35cff
+                );
+
+            box-shadow:
+                0 0 18px
+                rgba(80,160,255,.35);
+        }
+
+
+        .goal-info {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            margin-top: 12px;
+
+            color:
+                rgba(255,255,255,.43);
+
+            font-size: 12px;
+        }
+
+
+        .exam-icon {
+
+            font-size: 30px;
+
+            margin-bottom: 12px;
+        }
+
+
+        .exam-card h3 {
+
+            font-size: 18px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .exam-date {
+
+            color:
+                #ff8dcc;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+
+        .exam-days {
+
+            margin-top: 12px;
+
+            font-size: 27px;
+
+            font-weight: 900;
+        }
+
+
+        /* =====================================
+           QUICK ACTIONS
+        ====================================== */
+
+        .quick-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(5,1fr);
+
+            gap: 13px;
+        }
+
+
+        .quick {
+
+            padding: 17px;
+
+            text-align: center;
+
+            text-decoration: none;
+
+            color: white;
+
+            border-radius: 16px;
+
+            background:
+                rgba(255,255,255,.045);
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+
+            transition: .2s;
+        }
+
+
+        .quick:hover {
+
+            transform:
+                translateY(-5px);
+
+            background:
+                rgba(255,255,255,.075);
+
+            border-color:
+                rgba(255,255,255,.20);
+        }
+
+
+        .quick-icon {
+
+            font-size: 25px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .quick span {
+
+            color:
+                rgba(255,255,255,.68);
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================
+           RECENT
+        ====================================== */
+
+        .activity {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3,1fr);
+
+            gap: 15px;
+        }
+
+
+        .activity-item {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            padding: 17px;
+
+            border-radius: 16px;
+
+            background:
+                rgba(255,255,255,.04);
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+        }
+
+
+        .activity-icon {
+
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            border-radius: 12px;
+
+            background:
+                rgba(255,255,255,.07);
+        }
+
+
+        .activity-text {
+
+            min-width: 0;
+        }
+
+
+        .activity-text strong {
+
+            display: block;
+
+            font-size: 13px;
+
+            margin-bottom: 4px;
+        }
+
+
+        .activity-text span {
+
+            color:
+                rgba(255,255,255,.38);
+
+            font-size: 11px;
+        }
+
+
+        /* =====================================
+           LOGOUT
+        ====================================== */
+
+        .logout-wrap {
+
+            display: flex;
+
+            justify-content: center;
+
+            margin-top: 45px;
+        }
+
+
+        .logout {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            padding:
+                12px 26px;
+
+            color:
+                #ff9cac;
+
+            text-decoration: none;
+
+            border-radius: 12px;
+
+            background:
+                rgba(255,60,90,.07);
+
+            border:
+                1px solid
+                rgba(255,80,110,.20);
+
+            transition: .2s;
+        }
+
+
+        .logout:hover {
+
+            transform:
+                translateY(-3px);
+
+            background:
+                rgba(255,60,90,.12);
+        }
+
+
+        /* =====================================
+           DEV
+        ====================================== */
+
+        .dev-credit {
+
+            position: fixed;
+
+            right: 18px;
+
+            bottom: 10px;
+
+            z-index: 200;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            font-style: italic;
+
+            letter-spacing: 1px;
+
+            color: #dc8cff;
+
+            text-shadow:
+                0 0 5px #a52fff,
+                0 0 12px #ff32d0;
+
+            animation:
+                glow 2s
+                ease-in-out
+                infinite
+                alternate;
+
+            pointer-events: none;
+        }
+
+
+        @keyframes glow {
+
+            from {
+                opacity: .45;
+            }
+
+            to {
+                opacity: 1;
+            }
+
+        }
+
+
+
+        /* =====================================
+           PROFILE CARD
+        ====================================== */
+
+        .profile-card {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 22px;
+            border-radius: 21px;
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.075),
+                    rgba(255,255,255,.025)
+                );
+            border: 1px solid rgba(255,255,255,.10);
+            box-shadow:
+                0 15px 35px rgba(0,0,0,.20),
+                inset 0 1px 0 rgba(255,255,255,.07);
+            backdrop-filter: blur(15px);
+            transition: .25s;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(150,130,255,.25);
+            box-shadow:
+                0 22px 48px rgba(0,0,0,.28),
+                0 0 25px rgba(120,90,255,.08);
+        }
+
+        .profile-avatar {
+            width: 64px;
+            height: 64px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            font-size: 25px;
+            font-weight: 900;
+            color: white;
+            background:
+                linear-gradient(
+                    135deg,
+                    #19cfff,
+                    #765cff,
+                    #dc5cff
+                );
+            box-shadow:
+                0 10px 28px rgba(90,100,255,.24);
+        }
+
+        .profile-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .profile-info h3 {
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .profile-info p {
+            color: rgba(255,255,255,.45);
+            font-size: 13px;
+        }
+
+        .profile-open {
+            display: inline-flex;
+            align-items: center;
+            padding: 11px 16px;
+            border-radius: 12px;
+            color: #b9dfff;
+            text-decoration: none;
+            border: 1px solid rgba(100,190,255,.18);
+            background: rgba(60,150,255,.07);
+            transition: .2s;
+            white-space: nowrap;
+        }
+
+        .profile-open:hover {
+            transform: translateY(-2px);
+            color: white;
+            border-color: rgba(140,150,255,.35);
+            background: rgba(100,100,255,.12);
+        }
+
+        /* =====================================
+           RESPONSIVE
+        ====================================== */
+
+        @media(max-width:1000px) {
+
+            .stats {
+
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+
+            .grid {
+
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+
+            .quick-grid {
+
+                grid-template-columns:
+                    repeat(3,1fr);
+            }
+
+
+            .activity {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+        }
+
+
+
+        @media(max-width:700px) {
+
+            .profile-card {
+                align-items: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .profile-open {
+                width: 100%;
+                justify-content: center;
+            }
+
+
+
+            .navbar {
+
+                padding: 0 15px;
+            }
+
+
+            .nav-links a {
+
+                padding:
+                    8px;
+
+                font-size: 11px;
+            }
+
+
+            .dashboard {
+
+                width: 92%;
+
+                padding-top: 22px;
+            }
+
+
+            .hero {
+
+                padding: 25px;
+            }
+
+
+            .stats {
+
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+
+            .grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .two-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .quick-grid {
+
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+        }
+
+    </style>
+
+
+<style>
+    /* Dynamic dashboard stats */
+    .stat-number {
+        min-width: 2ch;
+    }
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================
+     NAVBAR
+====================================== -->
+
+<nav class="navbar">
+
+
+    <div class="logo">
+        NEXORA
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/student-tools">
+            Student Tools
+        </a>
+
+        <a href="/creator-tools">
+            Creator Tools
+        </a>
+
+    </div>
+
+
+</nav>
+
+
+
+<main class="dashboard">
+
+
+    <!-- =====================================
+         HERO
+    ====================================== -->
+
+    <section class="hero">
+
+        <div class="welcome">
+            WELCOME BACK
+        </div>
+
+
+        <h1>
+            Hey, {{ name }} 👋
+        </h1>
+
+
+        <p>
+            Your AI-powered workspace is ready.
+            Let's make today productive. 🚀
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================
+         STATS
+    ====================================== -->
+
+    <section class="stats">
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                🔥
+            </div>
+
+            <div class="stat-number">
+                {{ study_streak }}
+            </div>
+
+            <div class="stat-label">
+                Day Study Streak
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                ⏱️
+            </div>
+
+            <div class="stat-number">
+                {{ (study_minutes // 60) }}h
+            </div>
+
+            <div class="stat-label">
+                Study Time
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                📝
+            </div>
+
+            <div class="stat-number">
+                {{ mcqs_practiced }}
+            </div>
+
+            <div class="stat-label">
+                MCQs Practiced
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                🎯
+            </div>
+
+            <div class="stat-number">
+                {{ weekly_progress }}%
+            </div>
+
+            <div class="stat-label">
+                Weekly Progress
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================
+         TODAY + EXAM
+    ====================================== -->
+
+    <section class="section">
+
+
+        <div class="section-head">
+
+            <div>
+
+                <h2>
+                    🎯 Today's Focus
+                </h2>
+
+                <p>
+                    Keep moving forward.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="two-grid">
+
+
+            <div class="goal-card">
+
+                <div class="goal-top">
+
+                    <div class="goal-title">
+                        Complete today's study goal
+                    </div>
+
+                    <div class="goal-percent">
+                        62%
+                    </div>
+
+                </div>
+
+
+                <div class="progress">
+
+                    <div class="progress-fill"></div>
+
+                </div>
+
+
+                <div class="goal-info">
+
+                    <span>
+                        3.7 / 6 hours
+                    </span>
+
+                    <span>
+                        Keep going 🚀
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="exam-card">
+
+                <div class="exam-icon">
+                    📅
+                </div>
+
+                <h3>
+                    Upcoming Exam
+                </h3>
+
+                <div class="exam-date">
+                    Set your exam date
+                </div>
+
+                <div class="exam-days">
+                    Check Countdown →
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         AI TOOLS
+    ====================================== -->
+
+    <section class="section">
+
+
+        <div class="section-head">
+
+            <div>
+
+                <h2>
+                    🤖 AI Study Tools
+                </h2>
+
+                <p>
+                    Study smarter with NEXORA AI.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="grid">
+
+
+            <a
+                href="/mcq-generator"
+                class="card blue"
+            >
+
+                <div class="card-icon">
+                    🎓
+                </div>
+
+                <h3>
+                    AI MCQ Generator
+                </h3>
+
+                <p>
+                    Generate topic-wise MCQs in
+                    Hindi, English or Hinglish.
+                </p>
+
+                <span class="open">
+                    →
+                </span>
+
+            </a>
+
+
+
+            <a
+                href="/study-planner"
+                class="card purple"
+            >
+
+                <div class="card-icon">
+                    📚
+                </div>
+
+                <h3>
+                    AI Study Planner
+                </h3>
+
+                <p>
+                    Build a personalized study
+                    plan using AI.
+                </p>
+
+                <span class="open">
+                    →
+                </span>
+
+            </a>
+
+
+
+            <a
+                href="/content-ideas"
+                class="card yellow"
+            >
+
+                <div class="card-icon">
+                    💡
+                </div>
+
+                <h3>
+                    Content Ideas
+                </h3>
+
+                <p>
+                    Generate creative ideas for
+                    projects and content.
+                </p>
+
+                <span class="open">
+                    →
+                </span>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         STUDY TOOLS
+    ====================================== -->
+
+    <section class="section">
+
+
+        <div class="section-head">
+
+            <div>
+
+                <h2>
+                    📖 Study Essentials
+                </h2>
+
+                <p>
+                    Everything you need for preparation.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="grid">
+
+
+            <a
+                href="/study-timer"
+                class="card cyan"
+            >
+
+                <div class="card-icon">
+                    ⏱️
+                </div>
+
+                <h3>
+                    Study Timer
+                </h3>
+
+                <p>
+                    Focus sessions, breaks,
+                    sound and notifications.
+                </p>
+
+                <span class="open">
+                    →
+                </span>
+
+            </a>
+
+
+
+            <a
+                href="/exam-countdown"
+                class="card pink"
+            >
+
+                <div class="card-icon">
+                    📅
+                </div>
+
+                <h3>
+                    Exam Countdown
+                </h3>
+
+                <p>
+                    Track the exact time remaining
+                    for your exam.
+                </p>
+
+                <span class="open">
+                    →
+                </span>
+
+            </a>
+
+
+
+            <a
+                href="/study-planner"
+                class="card green"
+            >
+
+                <div class="card-icon">
+                    🗓️
+                </div>
+
+                <h3>
+                    Study Planner
+                </h3>
+
+                <p>
+                    Organize subjects, revision
+                    and daily targets.
+                </p>
+
+                <span class="open">
+                    →
+                </span>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         QUICK ACTIONS
+    ====================================== -->
+
+    <section class="section">
+
+
+        <div class="section-head">
+
+            <div>
+
+                <h2>
+                    ⚡ Quick Actions
+                </h2>
+
+                <p>
+                    One-click access to useful tools.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="quick-grid">
+
+
+            <a
+                href="/student-tools"
+                class="quick"
+            >
+
+                <div class="quick-icon">
+                    🎓
+                </div>
+
+                <span>
+                    All Student Tools
+                </span>
+
+            </a>
+
+
+            <a
+                href="/creator-tools"
+                class="quick"
+            >
+
+                <div class="quick-icon">
+                    🎨
+                </div>
+
+                <span>
+                    Creator Tools
+                </span>
+
+            </a>
+
+
+            <a
+                href="/study-timer"
+                class="quick"
+            >
+
+                <div class="quick-icon">
+                    ⏱️
+                </div>
+
+                <span>
+                    Start Studying
+                </span>
+
+            </a>
+
+
+            <a
+                href="/exam-countdown"
+                class="quick"
+            >
+
+                <div class="quick-icon">
+                    ⏳
+                </div>
+
+                <span>
+                    Check Exam
+                </span>
+
+            </a>
+
+
+            <a
+                href="/feedback"
+                class="quick"
+            >
+
+                <div class="quick-icon">
+                    💡
+                </div>
+
+                <span>
+                    Feedback
+                </span>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         RECENT ACTIVITY
+    ====================================== -->
+
+    <section class="section">
+
+
+        <div class="section-head">
+
+            <div>
+
+                <h2>
+                    🕒 Recent Activity
+                </h2>
+
+                <p>
+                    Your latest NEXORA actions.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="activity">
+
+
+            <div class="activity-item">
+
+                <div class="activity-icon">
+                    🤖
+                </div>
+
+                <div class="activity-text">
+
+                    <strong>
+                        MCQ Generator
+                    </strong>
+
+                    <span>
+                        Ready for your next practice
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="activity-item">
+
+                <div class="activity-icon">
+                    ⏱️
+                </div>
+
+                <div class="activity-text">
+
+                    <strong>
+                        Study Timer
+                    </strong>
+
+                    <span>
+                        Start your next focus session
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="activity-item">
+
+                <div class="activity-icon">
+                    📅
+                </div>
+
+                <div class="activity-text">
+
+                    <strong>
+                        Exam Countdown
+                    </strong>
+
+                    <span>
+                        Check your upcoming exam
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+
+    <!-- =====================================
+         PROFILE
+    ====================================== -->
+
+    
+    <section class="section">
+        <div class="profile-card">
+            <div class="profile-avatar">🏆</div>
+            <div class="profile-info">
+                <h3>Achievements</h3>
+                <p>Unlock badges as you learn and grow.</p>
+            </div>
+            <a href="/achievements" class="profile-open">View →</a>
+        </div>
+    </section>
+
+<section class="section profile-section">
+
+        <div class="section-head">
+            <div>
+                <h2>👤 Your Profile</h2>
+                <p>Your NEXORA account at a glance.</p>
+            </div>
+        </div>
+
+        <div class="profile-card">
+
+            <div class="profile-avatar">
+                {{ name[:1]|upper }}
+            </div>
+
+            <div class="profile-info">
+                <h3>{{ name }}</h3>
+                <p>Welcome to your personal NEXORA workspace.</p>
+            </div>
+
+            <a href="/profile" class="profile-open">
+                Open Profile →
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================
+         LOGOUT
+    ====================================== -->
+
+    <div class="logout-wrap">
+
+        <a
+            href="/logout"
+            class="logout"
+        >
+            🚪 Logout
+        </a>
+
+    </div>
+
+
+</main>
+
+
+
+<div class="dev-credit">
+    dev-vinayak
+</div>
+
+
+</body>
+
+</html>

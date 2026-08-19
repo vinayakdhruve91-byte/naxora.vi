@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Percentage Calculator | NEXORA</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .calculator-header h1 {
+            margin-bottom: 10px;
+        }
+
+        .calculator-header p {
+            opacity: 0.7;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .calculator-card {
+            padding: 25px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(255,255,255,0.06);
+
+            border:
+                1px solid rgba(255,255,255,0.10);
+
+            box-shadow:
+                0 12px 35px rgba(0,0,0,0.15);
+
+            backdrop-filter: blur(10px);
+        }
+
+        .calculator-card h2 {
+            margin-top: 0;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 18px;
+
+            border-radius: 14px;
+
+            background:
+                rgba(255,255,255,0.06);
+
+            text-align: center;
+        }
+
+        .result-number {
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .error {
+            margin-top: 10px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        @media (max-width: 700px) {
+
+            .calculator-page {
+                padding: 25px 12px;
+            }
+
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+        NEXORA
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/student-tools">
+            Student Tools
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<main class="calculator-page">
+
+
+    <div class="calculator-header">
+
+        <p class="welcome-text">
+            NEXORA STUDENT TOOLS
+        </p>
+
+        <h1>
+            Percentage Calculator 📊
+        </h1>
+
+        <p>
+            Calculate percentages quickly and easily.
+        </p>
+
+    </div>
+
+
+
+    <div class="calculator-grid">
+
+
+        <!-- =====================================
+             CALCULATOR 1
+        ====================================== -->
+
+        <div class="calculator-card">
+
+            <h2>
+                📌 Find Percentage
+            </h2>
+
+            <p>
+                What is X% of Y?
+            </p>
+
+
+            <div class="input-group">
+
+                <label>
+                    Percentage (%)
+                </label>
+
+                <input
+                    id="percent1"
+                    type="number"
+                    step="any"
+                    placeholder="Example: 20"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Number
+                </label>
+
+                <input
+                    id="number1"
+                    type="number"
+                    step="any"
+                    placeholder="Example: 500"
+                >
+
+            </div>
+
+
+            <button
+                class="calculate-btn"
+                onclick="calculatePercentage()"
+                type="button"
+            >
+                Calculate
+            </button>
+
+
+            <div
+                id="result1"
+                class="result"
+            >
+
+                <div>
+                    Result
+                </div>
+
+                <div
+                    id="answer1"
+                    class="result-number"
+                >
+                    —
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================
+             CALCULATOR 2
+        ====================================== -->
+
+        <div class="calculator-card">
+
+            <h2>
+                📈 Percentage Increase
+            </h2>
+
+            <p>
+                Find percentage increase or decrease.
+            </p>
+
+
+            <div class="input-group">
+
+                <label>
+                    Original Value
+                </label>
+
+                <input
+                    id="original"
+                    type="number"
+                    step="any"
+                    placeholder="Example: 100"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    New Value
+                </label>
+
+                <input
+                    id="newValue"
+                    type="number"
+                    step="any"
+                    placeholder="Example: 125"
+                >
+
+            </div>
+
+
+            <button
+                class="calculate-btn"
+                onclick="calculateChange()"
+                type="button"
+            >
+                Calculate
+            </button>
+
+
+            <div
+                id="result2"
+                class="result"
+            >
+
+                <div>
+                    Change
+                </div>
+
+                <div
+                    id="answer2"
+                    class="result-number"
+                >
+                    —
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================
+             CALCULATOR 3
+        ====================================== -->
+
+        <div class="calculator-card">
+
+            <h2>
+                🎯 Marks Percentage
+            </h2>
+
+            <p>
+                Calculate your exam percentage.
+            </p>
+
+
+            <div class="input-group">
+
+                <label>
+                    Marks Obtained
+                </label>
+
+                <input
+                    id="marks"
+                    type="number"
+                    step="any"
+                    min="0"
+                    placeholder="Example: 420"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Total Marks
+                </label>
+
+                <input
+                    id="totalMarks"
+                    type="number"
+                    step="any"
+                    min="1"
+                    placeholder="Example: 500"
+                >
+
+            </div>
+
+
+            <button
+                class="calculate-btn"
+                onclick="calculateMarksPercentage()"
+                type="button"
+            >
+                Calculate
+            </button>
+
+
+            <div class="result">
+
+                <div>
+                    Your Percentage
+                </div>
+
+                <div
+                    id="answer3"
+                    class="result-number"
+                >
+                    —
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================
+             CALCULATOR 4
+        ====================================== -->
+
+        <div class="calculator-card">
+
+            <h2>
+                🧮 Add Percentage
+            </h2>
+
+            <p>
+                Add or subtract a percentage from a number.
+            </p>
+
+
+            <div class="input-group">
+
+                <label>
+                    Number
+                </label>
+
+                <input
+                    id="baseNumber"
+                    type="number"
+                    step="any"
+                    placeholder="Example: 1000"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Percentage
+                </label>
+
+                <input
+                    id="changePercent"
+                    type="number"
+                    step="any"
+                    placeholder="Example: 10"
+                >
+
+            </div>
+
+
+            <button
+                class="calculate-btn"
+                onclick="addPercentage()"
+                type="button"
+            >
+                Calculate
+            </button>
+
+
+            <div class="result">
+
+                <div>
+                    New Value
+                </div>
+
+                <div
+                    id="answer4"
+                    class="result-number"
+                >
+                    —
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <a
+        href="/student-tools"
+        class="back-link"
+    >
+        ← Back to Student Tools
+    </a>
+
+
+</main>
+
+
+
+<script>
+
+
+// =====================================================
+// FIND X% OF Y
+// =====================================================
+
+function calculatePercentage() {
+
+    const percentage =
+        Number(
+            document
+            .getElementById(
+                "percent1"
+            )
+            .value
+        );
+
+    const number =
+        Number(
+            document
+            .getElementById(
+                "number1"
+            )
+            .value
+        );
+
+
+    if (
+        !Number.isFinite(percentage) ||
+        !Number.isFinite(number)
+    ) {
+
+        document
+            .getElementById(
+                "answer1"
+            )
+            .textContent =
+            "Enter valid values";
+
+        return;
+
+    }
+
+
+    const result =
+        (
+            percentage *
+            number
+        ) / 100;
+
+
+    document
+        .getElementById(
+            "answer1"
+        )
+        .textContent =
+        formatNumber(result);
+
+}
+
+
+
+// =====================================================
+// PERCENTAGE INCREASE / DECREASE
+// =====================================================
+
+function calculateChange() {
+
+    const original =
+        Number(
+            document
+            .getElementById(
+                "original"
+            )
+            .value
+        );
+
+    const newValue =
+        Number(
+            document
+            .getElementById(
+                "newValue"
+            )
+            .value
+        );
+
+
+    if (
+        !Number.isFinite(original) ||
+        !Number.isFinite(newValue) ||
+        original === 0
+    ) {
+
+        document
+            .getElementById(
+                "answer2"
+            )
+            .textContent =
+            "Enter valid values";
+
+        return;
+
+    }
+
+
+    const change =
+        (
+            (
+                newValue -
+                original
+            ) /
+            original
+        ) * 100;
+
+
+    const label =
+        change >= 0
+            ? "Increase: "
+            : "Decrease: ";
+
+
+    document
+        .getElementById(
+            "answer2"
+        )
+        .textContent =
+        label +
+        Math.abs(change)
+            .toFixed(2) +
+        "%";
+
+}
+
+
+
+// =====================================================
+// MARKS PERCENTAGE
+// =====================================================
+
+function calculateMarksPercentage() {
+
+    const marks =
+        Number(
+            document
+            .getElementById(
+                "marks"
+            )
+            .value
+        );
+
+    const total =
+        Number(
+            document
+            .getElementById(
+                "totalMarks"
+            )
+            .value
+        );
+
+
+    if (
+        !Number.isFinite(marks) ||
+        !Number.isFinite(total) ||
+        total <= 0 ||
+        marks < 0 ||
+        marks > total
+    ) {
+
+        document
+            .getElementById(
+                "answer3"
+            )
+            .textContent =
+            "Check your marks";
+
+        return;
+
+    }
+
+
+    const percentage =
+        (
+            marks /
+            total
+        ) * 100;
+
+
+    document
+        .getElementById(
+            "answer3"
+        )
+        .textContent =
+        percentage.toFixed(2) +
+        "%";
+
+}
+
+
+
+// =====================================================
+// ADD PERCENTAGE
+// =====================================================
+
+function addPercentage() {
+
+    const number =
+        Number(
+            document
+            .getElementById(
+                "baseNumber"
+            )
+            .value
+        );
+
+    const percentage =
+        Number(
+            document
+            .getElementById(
+                "changePercent"
+            )
+            .value
+        );
+
+
+    if (
+        !Number.isFinite(number) ||
+        !Number.isFinite(percentage)
+    ) {
+
+        document
+            .getElementById(
+                "answer4"
+            )
+            .textContent =
+            "Enter valid values";
+
+        return;
+
+    }
+
+
+    const result =
+        number *
+        (
+            1 +
+            percentage / 100
+        );
+
+
+    document
+        .getElementById(
+            "answer4"
+        )
+        .textContent =
+        formatNumber(result);
+
+}
+
+
+
+// =====================================================
+// FORMAT NUMBER
+// =====================================================
+
+function formatNumber(
+    number
+) {
+
+    return Number(
+        number.toFixed(4)
+    ).toLocaleString();
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
