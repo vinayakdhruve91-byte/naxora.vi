@@ -956,9 +956,9 @@ def ai_test():
                 ]
 
             },
-              "max_token": 4000
+              "max_tokens": 4000
             
-         }    
+         }   
             timeout=60
 
         )
