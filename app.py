@@ -1,3 +1,4 @@
+
 from flask import (
     Flask,
     render_template,
@@ -633,7 +634,6 @@ def ask_ai(prompt):
 
         ],
 
-        "max_tokens": 4000
 
     }
 
