@@ -953,7 +953,7 @@ def ai_test():
 
                     }
 
-                ]
+                ],
                 "max_tokens": 4000
             },
             timeout=60
