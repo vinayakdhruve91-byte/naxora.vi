@@ -15,12 +15,11 @@ from werkzeug.security import (
 
 from flask_sqlalchemy import SQLAlchemy
 
-from dotenv import load_dotenv
-
 import os
+import json
 import requests
 
-
+from dotenv import load_dotenv
 
 
 # =====================================================
@@ -59,6 +58,10 @@ app.config[
 
 
 db = SQLAlchemy(app)
+
+
+def login_required():
+    return "user_id" in session
 
 
 # =====================================================
@@ -109,33 +112,6 @@ class User(db.Model):
   
 
 
-
-
-# =====================================================
-# USER ACTIVITY
-# =====================================================
-
-class Activity(db.Model):
-
-    id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
-
-    user_id = db.Column(
-        db.Integer,
-        nullable=False
-    )
-
-    action = db.Column(
-        db.String(200),
-        nullable=False
-    )
-
-    created_at = db.Column(
-        db.DateTime,
-        default=db.func.now()
-    )
 
 # =====================================================
 # FEEDBACK DATABASE
@@ -389,251 +365,6 @@ def dashboard():
     )
 
 
-
-# =====================================================
-# PROFILE
-# =====================================================
-
-@app.route("/profile")
-def profile():
-
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-
-    user = User.query.get(session["user_id"])
-
-    if not user:
-        session.clear()
-        return redirect(url_for("login"))
-
-    activities = (
-        Activity.query
-        .filter_by(user_id=user.id)
-        .order_by(Activity.id.desc())
-        .limit(8)
-        .all()
-    )
-
-    return render_template(
-        "profile.html",
-        name=user.name,
-        email=user.email,
-        study_streak=user.study_streak or 0,
-        study_minutes=user.study_minutes or 0,
-        mcqs_practiced=user.mcqs_practiced or 0,
-        weekly_progress=user.weekly_progress or 0,
-        activities=activities
-    )
-
-
-
-@app.route("/profile/edit", methods=["GET", "POST"])
-def edit_profile():
-
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-
-    user = User.query.get(session["user_id"])
-
-    if not user:
-        session.clear()
-        return redirect(url_for("login"))
-
-    if request.method == "POST":
-
-        name = request.form.get("name", "").strip()
-        email = request.form.get("email", "").strip().lower()
-
-        if not name or not email:
-            return render_template(
-                "edit-profile.html",
-                name=user.name,
-                email=user.email,
-                error="Please fill both name and email."
-            )
-
-        # Check whether another account already uses this email.
-        existing_user = User.query.filter(
-            User.email == email,
-            User.id != user.id
-        ).first()
-
-        if existing_user:
-            return render_template(
-                "edit-profile.html",
-                name=user.name,
-                email=user.email,
-                error="This email is already registered."
-            )
-
-        old_name = user.name
-
-        user.name = name
-        user.email = email
-
-        db.session.add(
-            Activity(
-                user_id=user.id,
-                action="Updated profile"
-            )
-        )
-
-        db.session.commit()
-
-        # Keep the current login session in sync.
-        session["user_name"] = user.name
-        session["user_email"] = user.email
-
-        return redirect(url_for("profile"))
-
-    return render_template(
-        "edit-profile.html",
-        name=user.name,
-        email=user.email
-    )
-
-
-
-# =====================================================
-# CHANGE PASSWORD
-# =====================================================
-
-@app.route("/profile/password", methods=["GET", "POST"])
-def change_password():
-
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-
-    user = User.query.get(session["user_id"])
-
-    if not user:
-        session.clear()
-        return redirect(url_for("login"))
-
-    if request.method == "POST":
-
-        current_password = request.form.get("current_password", "")
-        new_password = request.form.get("new_password", "")
-        confirm_password = request.form.get("confirm_password", "")
-
-        if not current_password or not new_password or not confirm_password:
-            return render_template(
-                "change-password.html",
-                error="Please fill all password fields."
-            )
-
-        if not check_password_hash(user.password, current_password):
-            return render_template(
-                "change-password.html",
-                error="Current password is incorrect."
-            )
-
-        if len(new_password) < 8:
-            return render_template(
-                "change-password.html",
-                error="New password must be at least 8 characters."
-            )
-
-        if new_password != confirm_password:
-            return render_template(
-                "change-password.html",
-                error="New passwords do not match."
-            )
-
-        user.password = generate_password_hash(new_password)
-
-        db.session.add(
-            Activity(
-                user_id=user.id,
-                action="Changed account password"
-            )
-        )
-
-        db.session.commit()
-
-        return redirect(url_for("profile"))
-
-    return render_template("change-password.html")
-
-
-
-# =====================================================
-# ACHIEVEMENTS
-# =====================================================
-
-@app.route("/achievements")
-def achievements():
-
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-
-    user = User.query.get(session["user_id"])
-
-    if not user:
-        session.clear()
-        return redirect(url_for("login"))
-
-    streak = user.study_streak or 0
-    mcqs = user.mcqs_practiced or 0
-    minutes = user.study_minutes or 0
-    progress = user.weekly_progress or 0
-
-    badges = [
-        {
-            "icon": "🚀",
-            "title": "Welcome Aboard",
-            "text": "Create your NEXORA account.",
-            "unlocked": True
-        },
-        {
-            "icon": "🔥",
-            "title": "3-Day Streak",
-            "text": "Reach a 3 day study streak.",
-            "unlocked": streak >= 3
-        },
-        {
-            "icon": "🔥",
-            "title": "7-Day Streak",
-            "text": "Reach a 7 day study streak.",
-            "unlocked": streak >= 7
-        },
-        {
-            "icon": "📝",
-            "title": "First 10 MCQs",
-            "text": "Practice 10 MCQs.",
-            "unlocked": mcqs >= 10
-        },
-        {
-            "icon": "🏆",
-            "title": "100 MCQs",
-            "text": "Practice 100 MCQs.",
-            "unlocked": mcqs >= 100
-        },
-        {
-            "icon": "⏱️",
-            "title": "Study Starter",
-            "text": "Complete 60 minutes of study.",
-            "unlocked": minutes >= 60
-        },
-        {
-            "icon": "🎯",
-            "title": "Weekly Goal",
-            "text": "Reach 100% weekly progress.",
-            "unlocked": progress >= 100
-        }
-    ]
-
-    unlocked_count = sum(1 for badge in badges if badge["unlocked"])
-
-    return render_template(
-        "achievements.html",
-        name=user.name,
-        badges=badges,
-        unlocked_count=unlocked_count,
-        total_count=len(badges)
-    )
-
-
 # =====================================================
 # STUDENT TOOLS
 # =====================================================
@@ -860,17 +591,229 @@ def cgpa():
     )
 
 
-# =====================================================
-# AI — OPENROUTER
-# =====================================================
+# =========================================================
+# OPENROUTER HELPER
+# =========================================================
+
+def ask_ai(prompt):
+
+    if not OPENROUTER_API_KEY:
+
+        return None, "OpenRouter API key is not configured."
+
+
+    headers = {
+
+        "Authorization":
+            f"Bearer {OPENROUTER_API_KEY}",
+
+        "Content-Type":
+            "application/json",
+
+        "X-Title":
+            "NEXORA AI"
+
+    }
+
+
+    payload = {
+
+        "model":
+            "openai/gpt-5",
+
+        "messages": [
+
+            {
+                "role":
+                    "user",
+
+                "content":
+                    prompt
+            }
+
+        ],
+
+        "max_tokens": 4000
+
+    }
+
+
+    try:
+
+        response = requests.post(
+
+            "https://openrouter.ai/api/v1/chat/completions",
+
+            headers=headers,
+
+            json=payload,
+
+            timeout=60
+
+        )
+
+
+        data = response.json()
+
+
+        if response.status_code != 200:
+
+            error_message = (
+                data
+                .get("error", {})
+                .get(
+                    "message",
+                    "OpenRouter request failed."
+                )
+            )
+
+            return None, error_message
+
+
+        choices = data.get(
+            "choices",
+            []
+        )
+
+
+        if not choices:
+
+            return None, "AI returned no response."
+
+
+        content = (
+            choices[0]
+            .get("message", {})
+            .get("content", "")
+        )
+
+
+        if not content:
+
+            return None, "AI returned an empty response."
+
+
+        return content.strip(), None
+
+
+    except requests.exceptions.Timeout:
+
+        return None, "AI request timed out."
+
+
+    except requests.exceptions.RequestException:
+
+        return None, "Could not connect to OpenRouter."
+
+
+    except Exception:
+
+        app.logger.exception(
+            "OpenRouter error"
+        )
+
+        return None, "Unexpected AI error."
+
+
+# =========================================================
+# AI CAPTION GENERATOR
+# =========================================================
+
+
+# =========================================================
+# AI SCRIPT GENERATOR
+# =========================================================
 
 @app.route(
-    "/api/ai-test",
+    "/api/generate-script",
     methods=["POST"]
 )
-def ai_test():
+def generate_script():
 
-    if "user_id" not in session:
+    if not login_required():
+        return jsonify({
+            "success": False,
+            "message": "Login required"
+        }), 401
+
+    data = request.get_json(
+        silent=True
+    ) or {}
+
+    platform = str(
+        data.get("platform", "YouTube")
+    ).strip()
+
+    topic = str(
+        data.get("topic", "")
+    ).strip()
+
+    duration = str(
+        data.get("duration", "60 seconds")
+    ).strip()
+
+    style = str(
+        data.get("style", "Engaging")
+    ).strip()
+
+    audience = str(
+        data.get("audience", "General")
+    ).strip()
+
+    if not topic:
+        return jsonify({
+            "success": False,
+            "message": "Please enter a topic."
+        }), 400
+
+    prompt = f"""
+You are the NEXORA AI Script Writer.
+
+Create an original video script.
+
+Platform: {platform}
+Topic: {topic}
+Duration: {duration}
+Style: {style}
+Target Audience: {audience}
+
+Create a clear, engaging script with:
+
+1. HOOK
+2. INTRO
+3. MAIN CONTENT
+4. ENDING
+5. CALL TO ACTION
+
+Requirements:
+- Match the requested platform.
+- Match the requested duration.
+- Make the script natural and easy to speak.
+- Keep the audience engaged.
+- Do not mention AI.
+- Do not add unnecessary explanations.
+- Return only the finished script.
+"""
+
+    script, error = ask_ai(prompt)
+
+    if error:
+        return jsonify({
+            "success": False,
+            "message": error
+        }), 500
+
+    return jsonify({
+        "success": True,
+        "script": script
+    })
+@app.route(
+    "/api/generate-caption",
+    methods=["POST"]
+)
+def generate_caption():
+
+    if not login_required():
 
         return jsonify({
 
@@ -882,16 +825,290 @@ def ai_test():
         }), 401
 
 
-    if not OPENROUTER_API_KEY:
+    data = request.get_json(
+        silent=True
+    ) or {}
+
+
+    platform = str(
+        data.get(
+            "platform",
+            "Instagram"
+        )
+    ).strip()
+
+
+    topic = str(
+        data.get(
+            "topic",
+            ""
+        )
+    ).strip()
+
+
+    style = str(
+        data.get(
+            "style",
+            "Trendy"
+        )
+    ).strip()
+
+
+    length = str(
+        data.get(
+            "length",
+            "Medium"
+        )
+    ).strip()
+
+
+    if not topic:
 
         return jsonify({
 
             "success": False,
 
             "message":
-                "OpenRouter API key is not configured."
+                "Please enter a topic."
 
-        }), 503
+        }), 400
+
+
+    prompt = f"""
+You are the NEXORA AI Creator Assistant.
+
+Create one original social-media caption.
+
+Platform: {platform}
+
+Topic:
+{topic}
+
+Style:
+{style}
+
+Length:
+{length}
+
+Rules:
+- Make it original.
+- Make it natural and engaging.
+- Match the platform.
+- Match the requested style.
+- Use emojis naturally.
+- Do not mention AI.
+- Do not add hashtags.
+- Return only the caption.
+"""
+
+
+    caption, error = ask_ai(
+        prompt
+    )
+
+
+    if error:
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+                error
+
+        }), 500
+
+
+    return jsonify({
+
+        "success": True,
+
+        "caption":
+            caption
+
+    })
+
+
+# =========================================================
+# AI TITLE GENERATOR
+# =========================================================
+
+@app.route(
+    "/api/generate-title",
+    methods=["POST"]
+)
+def generate_title():
+
+    if not login_required():
+        return jsonify({
+            "success": False,
+            "message": "Login required"
+        }), 401
+
+    data = request.get_json(
+        silent=True
+    ) or {}
+
+    platform = str(
+        data.get("platform", "YouTube")
+    ).strip()
+
+    topic = str(
+        data.get("topic", "")
+    ).strip()
+
+    style = str(
+        data.get("style", "Clickable")
+    ).strip()
+
+    count = int(
+        data.get("count", 10)
+    )
+
+    if not topic:
+        return jsonify({
+            "success": False,
+            "message": "Please enter a topic."
+        }), 400
+
+    count = max(
+        1,
+        min(count, 20)
+    )
+
+    prompt = f"""
+You are the NEXORA AI Title Generator.
+
+Generate {count} original video titles.
+
+Platform: {platform}
+Topic: {topic}
+Style: {style}
+
+Requirements:
+- Make every title different.
+- Make them interesting and natural.
+- Match the platform.
+- Avoid fake or misleading claims.
+- Avoid unnecessary clickbait.
+- Keep titles concise.
+- Number each title from 1 to {count}.
+- Return only the numbered titles.
+"""
+
+    titles, error = ask_ai(prompt)
+
+    if error:
+        return jsonify({
+            "success": False,
+            "message": error
+        }), 500
+
+    return jsonify({
+        "success": True,
+        "titles": titles
+    })
+
+# =========================================================
+# AI BIO GENERATOR
+# =========================================================
+
+@app.route(
+    "/api/generate-bio",
+    methods=["POST"]
+)
+def generate_bio():
+
+    if not login_required():
+
+        return jsonify({
+            "success": False,
+            "message": "Login required"
+        }), 401
+
+    data = request.get_json(
+        silent=True
+    ) or {}
+
+    username = str(
+        data.get("username", "")
+    ).strip()
+
+    niche = str(
+        data.get("niche", "")
+    ).strip()
+
+    platform = str(
+        data.get("platform", "Instagram")
+    ).strip()
+
+    style = str(
+        data.get("style", "Professional")
+    ).strip()
+
+    extra = str(
+        data.get("extra", "")
+    ).strip()
+
+    if not niche:
+
+        return jsonify({
+            "success": False,
+            "message": "Please enter your niche."
+        }), 400
+
+    prompt = f"""
+You are the NEXORA AI Bio Generator.
+
+Create 5 original social-media bios.
+
+Platform: {platform}
+Username: {username or "Not provided"}
+Niche: {niche}
+Style: {style}
+Extra information: {extra or "None"}
+
+Requirements:
+- Create exactly 5 different bios.
+- Keep them concise and natural.
+- Match the selected platform.
+- Match the requested style.
+- Make each bio different.
+- Use emojis naturally when appropriate.
+- Do not make false claims.
+- Number each bio from 1 to 5.
+- Return only the five bios.
+"""
+
+    bios, error = ask_ai(prompt)
+
+    if error:
+
+        return jsonify({
+            "success": False,
+            "message": error
+        }), 500
+
+    return jsonify({
+        "success": True,
+        "bios": bios
+    })
+# =========================================================
+# AI CONTENT IDEAS GENERATOR
+# =========================================================
+
+@app.route(
+    "/api/generate-content-ideas",
+    methods=["POST"]
+)
+def generate_content_ideas():
+
+    if not login_required():
+
+        return jsonify({
+            "success": False,
+            "message": "Login required"
+        }), 401
 
 
     data = request.get_json(
@@ -899,9 +1116,581 @@ def ai_test():
     ) or {}
 
 
-    prompt = data.get(
-        "prompt",
-        ""
+    niche = str(
+        data.get("niche", "")
+    ).strip()
+
+
+    platform = str(
+        data.get(
+            "platform",
+            "Instagram"
+        )
+    ).strip()
+
+
+    content_type = str(
+        data.get(
+            "content_type",
+            "Reels"
+        )
+    ).strip()
+
+
+    audience = str(
+        data.get(
+            "audience",
+            "General audience"
+        )
+    ).strip()
+
+
+    count = int(
+        data.get(
+            "count",
+            10
+        )
+    )
+
+
+    if not niche:
+
+        return jsonify({
+            "success": False,
+            "message": "Please enter your niche."
+        }), 400
+
+
+    count = max(
+        1,
+        min(count, 20)
+    )
+
+
+    prompt = f"""
+You are the NEXORA AI Content Ideas Assistant.
+
+Generate {count} original content ideas.
+
+Niche:
+{niche}
+
+Platform:
+{platform}
+
+Content Type:
+{content_type}
+
+Target Audience:
+{audience}
+
+Requirements:
+- Every idea must be different.
+- Make ideas practical and creative.
+- Match the selected platform.
+- Match the content type.
+- Consider the target audience.
+- Avoid repetitive ideas.
+- Do not make false claims.
+- Number every idea from 1 to {count}.
+- Give only the ideas with a short one-line description.
+"""
+
+
+    ideas, error = ask_ai(
+        prompt
+    )
+
+
+    if error:
+
+        return jsonify({
+            "success": False,
+            "message": error
+        }), 500
+
+
+    return jsonify({
+        "success": True,
+        "ideas": ideas
+    })
+
+# =========================================================
+# AI HASHTAG GENERATOR
+# =========================================================
+
+@app.route(
+    "/api/generate-hashtags",
+    methods=["POST"]
+)
+def generate_hashtags():
+
+    if not login_required():
+
+        return jsonify({
+            "success": False,
+            "message": "Login required"
+        }), 401
+
+    data = request.get_json(
+        silent=True
+    ) or {}
+
+    niche = str(
+        data.get("niche", "")
+    ).strip()
+
+    platform = str(
+        data.get(
+            "platform",
+            "Instagram"
+        )
+    ).strip()
+
+    topic = str(
+        data.get(
+            "topic",
+            ""
+        )
+    ).strip()
+
+    count = int(
+        data.get(
+            "count",
+            20
+        )
+    )
+
+    if not niche:
+
+        return jsonify({
+            "success": False,
+            "message": "Please enter your niche."
+        }), 400
+
+    count = max(
+        5,
+        min(count, 30)
+    )
+
+    prompt = f"""
+You are the NEXORA AI Hashtag Assistant.
+
+Generate {count} relevant hashtags.
+
+Niche:
+{niche}
+
+Platform:
+{platform}
+
+Content Topic:
+{topic or "General content in this niche"}
+
+Requirements:
+- Every hashtag must be relevant.
+- Mix broad, medium, and niche-specific hashtags.
+- Do not repeat hashtags.
+- Do not use spaces inside hashtags.
+- Do not use numbered lists.
+- Return only hashtags separated by spaces.
+- Include the # symbol.
+"""
+
+    hashtags, error = ask_ai(
+        prompt
+    )
+
+    if error:
+
+        return jsonify({
+            "success": False,
+            "message": error
+        }), 500
+
+    return jsonify({
+        "success": True,
+        "hashtags": hashtags
+    })
+# =========================================================
+# AI MCQ GENERATOR
+# =========================================================
+
+@app.route(
+    "/api/generate-mcq",
+    methods=["POST"]
+)
+@app.route(
+    "/api/mcq-generator",
+    methods=["POST"]
+)
+def generate_mcq():
+
+    if not login_required():
+
+        return jsonify({
+            "success": False,
+            "message": "Login required"
+        }), 401
+
+
+    data = request.get_json(
+        silent=True
+    ) or {}
+
+
+    subject = str(
+        data.get("subject", "")
+    ).strip()
+
+
+    topic = str(
+        data.get("topic", "")
+    ).strip()
+
+
+    difficulty = str(
+        data.get(
+            "difficulty",
+            "Medium"
+        )
+    ).strip()
+    language = str(
+    data.get(
+        "language",
+        "English"
+    )
+).strip()
+
+
+    try:
+
+        count = int(
+            data.get(
+                "count",
+                10
+            )
+        )
+
+    except (TypeError, ValueError):
+
+        count = 10
+
+
+    if not subject:
+
+        return jsonify({
+            "success": False,
+            "message": "Please enter a subject."
+        }), 400
+
+
+    if not topic:
+
+        return jsonify({
+            "success": False,
+            "message": "Please enter a topic."
+        }), 400
+
+
+    count = max(
+        5,
+        min(count, 30)
+    )
+
+
+    prompt = f"""
+You are the NEXORA AI Exam Assistant.
+
+Create exactly {count} multiple-choice questions.
+
+Subject:
+{subject}
+
+Topic:
+{topic}
+
+Difficulty:
+{difficulty}
+Language:
+{language}
+
+IMPORTANT:
+- Write the question, options, answer and explanation in the selected language.
+- If Hindi is selected, use clear Hindi.
+- If Hinglish is selected, use Hindi written in Roman script.
+
+For EVERY question provide exactly:
+
+Question
+Option A
+Option B
+Option C
+Option D
+Correct answer
+Explanation
+
+IMPORTANT:
+- Every question must be different.
+- Every question must have exactly 4 options.
+- Only ONE option can be correct.
+- The correct answer must be one of A, B, C or D.
+- Make questions factually accurate.
+- Match the requested difficulty.
+- Do not repeat questions.
+- Do not use markdown.
+- Return ONLY valid JSON.
+
+Use this exact JSON structure:
+
+[
+  {{
+    "question": "Question text",
+    "options": {{
+      "A": "Option A",
+      "B": "Option B",
+      "C": "Option C",
+      "D": "Option D"
+    }},
+    "answer": "A",
+    "explanation": "Short explanation"
+  }}
+]
+"""
+
+
+    result, error = ask_ai(
+        prompt
+    )
+
+
+    if error:
+
+        return jsonify({
+            "success": False,
+            "message": error
+        }), 500
+
+
+    try:
+
+        questions = json.loads(
+            result
+        )
+
+
+    except json.JSONDecodeError:
+
+        # Try to extract JSON if model
+        # returned extra text.
+
+        start = result.find("[")
+
+        end = result.rfind("]") + 1
+
+
+        if start == -1 or end <= start:
+
+            return jsonify({
+                "success": False,
+                "message":
+                    "AI returned invalid MCQ data."
+            }), 500
+
+
+        try:
+
+            questions = json.loads(
+                result[start:end]
+            )
+
+        except json.JSONDecodeError:
+
+            return jsonify({
+                "success": False,
+                "message":
+                    "Could not read AI questions."
+            }), 500
+
+
+    if not isinstance(
+        questions,
+        list
+    ):
+
+        return jsonify({
+            "success": False,
+            "message":
+                "Invalid question format."
+        }), 500
+
+
+    cleaned_questions = []
+
+
+    for item in questions:
+
+        if not isinstance(
+            item,
+            dict
+        ):
+
+            continue
+
+
+        question = str(
+            item.get(
+                "question",
+                ""
+            )
+        ).strip()
+
+
+        options = item.get(
+            "options",
+            {}
+        )
+
+
+        answer = str(
+            item.get(
+                "answer",
+                ""
+            )
+        ).strip().upper()
+
+
+        explanation = str(
+            item.get(
+                "explanation",
+                ""
+            )
+        ).strip()
+
+
+        if not question:
+
+            continue
+
+
+        if not isinstance(
+            options,
+            dict
+        ):
+
+            continue
+
+
+        required_options = [
+            "A",
+            "B",
+            "C",
+            "D"
+        ]
+
+
+        if not all(
+            key in options
+            for key in required_options
+        ):
+
+            continue
+
+
+        if answer not in required_options:
+
+            continue
+
+
+        cleaned_questions.append({
+
+            "question":
+                question,
+
+            "options": {
+
+                "A":
+                    str(options["A"]),
+
+                "B":
+                    str(options["B"]),
+
+                "C":
+                    str(options["C"]),
+
+                "D":
+                    str(options["D"])
+
+            },
+
+            "answer":
+                answer,
+
+            "explanation":
+                explanation
+
+        })
+
+
+    if not cleaned_questions:
+
+        return jsonify({
+            "success": False,
+            "message":
+                "No valid questions were generated."
+        }), 500
+
+
+    user = User.query.get(session["user_id"])
+    if user:
+        user.mcqs_practiced = (user.mcqs_practiced or 0) + len(cleaned_questions)
+        db.session.commit()
+
+    return jsonify({
+
+        "success": True,
+
+        "questions":
+            cleaned_questions
+
+    })
+
+
+
+
+
+# =========================================================
+# AI TEST
+# =========================================================
+
+@app.route(
+    "/api/ai-test",
+    methods=["POST"]
+)
+def ai_test():
+
+    if not login_required():
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+                "Login required"
+
+        }), 401
+
+
+    data = request.get_json(
+        silent=True
+    ) or {}
+
+
+    prompt = str(
+        data.get(
+            "prompt",
+            ""
+        )
     ).strip()
 
 
@@ -917,133 +1706,34 @@ def ai_test():
         }), 400
 
 
-    try:
-
-        response = requests.post(
-
-            "https://openrouter.ai/api/v1/chat/completions",
-
-            headers={
-
-                "Authorization":
-                    f"Bearer {OPENROUTER_API_KEY}",
-
-                "Content-Type":
-                    "application/json",
-
-                "X-Title":
-                    "NEXORA"
-
-            },
-
-            json={
-
-                "model":
-                    "openai/gpt-5",
-
-                "messages": [
-
-                    {
-
-                        "role":
-                            "user",
-
-                        "content":
-                            prompt
-
-                    }
-
-                ],
-                "max_tokens": 4000
-            },
-            timeout=60
-        )
-
-                
+    response, error = ask_ai(
+        prompt
+    )
 
 
-        if not response.ok:
-
-            app.logger.error(
-                "OpenRouter error: %s",
-                response.text
-            )
-
-
-            return jsonify({
-
-                "success": False,
-
-                "message":
-                    "AI request failed."
-
-            }), 500
-
-
-        result = response.json()
-
-
-        answer = (
-            result
-            .get("choices", [{}])[0]
-            .get("message", {})
-            .get("content", "")
-        )
-
-
-        if not answer:
-
-            return jsonify({
-
-                "success": False,
-
-                "message":
-                    "AI returned an empty response."
-
-            }), 500
-
-
-        return jsonify({
-
-            "success": True,
-
-            "response": answer
-
-        })
-
-
-    except requests.RequestException:
-
-        app.logger.exception(
-            "OpenRouter connection failed"
-        )
-
+    if error:
 
         return jsonify({
 
             "success": False,
 
             "message":
-                "Could not connect to AI service."
+                error
 
         }), 500
 
 
-    except Exception:
+    return jsonify({
 
-        app.logger.exception(
-            "AI request failed"
-        )
+        "success": True,
+
+        "response":
+            response
+
+    })
 
 
-        return jsonify({
 
-            "success": False,
-
-            "message":
-                "AI request failed."
-
-        }), 500
 
 
 # =====================================================
