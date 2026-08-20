@@ -954,14 +954,12 @@ def ai_test():
                     }
 
                 ]
-
+                "max_tokens": 4000
             },
-              "max_tokens": 4000
-            
-         }   
             timeout=60
-
         )
+
+                
 
 
         if not response.ok:
