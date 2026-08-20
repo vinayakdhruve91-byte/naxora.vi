@@ -634,6 +634,7 @@ def ask_ai(prompt):
 
         ],
 
+        "max_tokens": 4000
 
     }
 
